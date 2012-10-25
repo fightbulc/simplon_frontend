@@ -4,22 +4,22 @@
 
   class FrontendContext
   {
-    /** @var FrontendContext */
+    /** @var static */
     private static $_instance;
 
     // ##########################################
 
     /**
-     * @return FrontendContext
+     * @return static
      */
     public static function getInstance()
     {
-      if(! isset(FrontendContext::$_instance))
+      if(! isset(static::$_instance))
       {
-        FrontendContext::$_instance = new FrontendContext();
+        static::$_instance = new static();
       }
 
-      return FrontendContext::$_instance;
+      return static::$_instance;
     }
 
     // ##########################################
