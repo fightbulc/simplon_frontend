@@ -2,7 +2,7 @@
 
   namespace Simplon\Frontend;
 
-  class FrontendContext implements ContextInterface
+  class FrontendContext
   {
     /** @var FrontendContext */
     private static $_instance;
