@@ -149,6 +149,18 @@
     // ##########################################
 
     /**
+     * @return bool|string
+     */
+    protected function _getId()
+    {
+      $id = $this->_getByKey('id');
+
+      return $id === FALSE ? 1 : $id;
+    }
+
+    // ##########################################
+
+    /**
      * @param $method
      * @return JsonRpcApi
      */
@@ -157,16 +169,6 @@
       $this->_setByKey('method', $method);
 
       return $this;
-    }
-
-    // ##########################################
-
-    /**
-     * @return bool|string
-     */
-    protected function _getId()
-    {
-      return $this->_getByKey('id');
     }
 
     // ##########################################
