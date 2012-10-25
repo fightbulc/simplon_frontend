@@ -12,26 +12,11 @@
     /**
      * Chaining before PHP 5.4
      *
-     * @param $url
      * @return JsonRpcApi
      */
-    public static function api($url)
+    public static function init()
     {
-      return new JsonRpcApi($url);
-    }
-
-    // ##########################################
-
-    /**
-     * @param $url
-     */
-    protected function __constructor($url)
-    {
-      // set url
-      $this->_setUrl($url);
-
-      // set default method
-      $this->_setRequestMethod('POST');
+      return new JsonRpcApi();
     }
 
     // ##########################################
@@ -55,16 +40,21 @@
       $response = \CURL::init($this->_getUrl())
         ->addHttpHeader('Content-type', 'application/json')
         ->setPost(TRUE)
-        ->setPostFields($this->_getData())
+        ->setPostFields($this->_getDataAsJson())
         ->setReturnTransfer(TRUE)
         ->execute();
 
-      if(! isset($response['result']))
+      // decode json data
+      $data = json_decode($response, TRUE);
+
+      // valid json-rpc response
+      if(! isset($data['result']))
       {
         $this->_throwError('Invalid JSON-RPC response');
       }
 
-      return json_decode($response['result'], TRUE);
+      // and out
+      return $data['result'];
     }
 
     // ##########################################
@@ -103,7 +93,7 @@
      * @param $url
      * @return JsonRpcApi
      */
-    protected function _setUrl($url)
+    public function setUrl($url)
     {
       $this->_setByKey('url', $url);
 
@@ -117,7 +107,7 @@
      */
     protected function _getUrl()
     {
-      return $this->_getByKey('url');
+      return rtrim($this->_getByKey('url'), '/') . '/';
     }
 
     // ##########################################
@@ -219,8 +209,18 @@
       return array(
         "id"     => $this->_getId(),
         "method" => $this->_getMethod(),
-        "params" => $data,
+        "params" => array($data),
       );
+    }
+
+    // ##########################################
+
+    /**
+     * @return string
+     */
+    protected function _getDataAsJson()
+    {
+      return json_encode($this->_getData());
     }
 
     // ##########################################
