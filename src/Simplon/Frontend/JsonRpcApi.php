@@ -37,16 +37,34 @@
     // ##########################################
 
     /**
+     * @param $message
+     * @throws \Exception
+     */
+    protected function _throwError($message)
+    {
+      throw new \Exception(__NAMESPACE__ . '/' . __CLASS__ . ': ' . $message, 500);
+    }
+
+    // ##########################################
+
+    /**
      * @return mixed
      */
     protected function _fetchFromApi()
     {
-      return \CURL::init($this->_getUrl())
+      $response = \CURL::init($this->_getUrl())
         ->addHttpHeader('Content-type', 'application/json')
         ->setPost(TRUE)
         ->setPostFields($this->_getData())
         ->setReturnTransfer(TRUE)
         ->execute();
+
+      if(! isset($response['result']))
+      {
+        $this->_throwError('Invalid JSON-RPC response');
+      }
+
+      return json_decode($response['result'], TRUE);
     }
 
     // ##########################################
@@ -56,7 +74,7 @@
      * @param $value
      * @return JsonRpcApi
      */
-    protected function setByKey($key, $value)
+    protected function _setByKey($key, $value)
     {
       $this->_data[$key] = $value;
 
@@ -69,7 +87,7 @@
      * @param $key
      * @return bool|string
      */
-    protected function getByKey($key)
+    protected function _getByKey($key)
     {
       if(! isset($this->_data[$key]))
       {
@@ -87,7 +105,7 @@
      */
     protected function _setUrl($url)
     {
-      $this->setByKey('url', $url);
+      $this->_setByKey('url', $url);
 
       return $this;
     }
@@ -99,7 +117,7 @@
      */
     protected function _getUrl()
     {
-      return $this->getByKey('url');
+      return $this->_getByKey('url');
     }
 
     // ##########################################
@@ -110,7 +128,7 @@
      */
     protected function _setRequestMethod($method)
     {
-      $this->setByKey('requestMethod', $method);
+      $this->_setByKey('requestMethod', $method);
 
       return $this;
     }
@@ -122,7 +140,7 @@
      */
     protected function _getRequestMethod()
     {
-      return $this->getByKey('requestMethod');
+      return $this->_getByKey('requestMethod');
     }
 
     // ##########################################
@@ -133,7 +151,7 @@
      */
     public function setId($id)
     {
-      $this->setByKey('id', $id);
+      $this->_setByKey('id', $id);
 
       return $this;
     }
@@ -146,7 +164,7 @@
      */
     public function setMethod($method)
     {
-      $this->setByKey('method', $method);
+      $this->_setByKey('method', $method);
 
       return $this;
     }
@@ -158,7 +176,7 @@
      */
     protected function _getId()
     {
-      return $this->getByKey('id');
+      return $this->_getByKey('id');
     }
 
     // ##########################################
@@ -168,7 +186,7 @@
      */
     protected function _getMethod()
     {
-      return $this->getByKey('method');
+      return $this->_getByKey('method');
     }
 
     // ##########################################
@@ -179,7 +197,7 @@
      */
     public function setData($data)
     {
-      $this->setByKey('data', $data);
+      $this->_setByKey('data', $data);
 
       return $this;
     }
@@ -191,7 +209,7 @@
      */
     protected function _getData()
     {
-      $data = $this->getByKey('data');
+      $data = $this->_getByKey('data');
 
       if($data === FALSE)
       {
@@ -208,17 +226,6 @@
     // ##########################################
 
     /**
-     * @param $fieldId
-     * @throws \Exception
-     */
-    protected function _throwError($fieldId)
-    {
-      throw new \Exception(__NAMESPACE__ . '/' . __CLASS__ . ': missing <' . $fieldId . '>', 500);
-    }
-
-    // ##########################################
-
-    /**
      * @return mixed
      * @throws \Exception
      */
@@ -226,22 +233,22 @@
     {
       if($this->_getUrl() === FALSE)
       {
-        $this->_throwError('url');
+        $this->_throwError('missing <url>');
       }
 
       if($this->_getId() === FALSE)
       {
-        $this->_throwError('id');
+        $this->_throwError('missing <id>');
       }
 
       if($this->_getMethod() === FALSE)
       {
-        $this->_throwError('method');
+        $this->_throwError('missing <method>');
       }
 
       if($this->_getData() === FALSE)
       {
-        $this->_throwError('data');
+        $this->_throwError('missing <data>');
       }
 
       // all cool, fetch now data
