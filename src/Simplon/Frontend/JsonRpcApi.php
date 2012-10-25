@@ -42,7 +42,8 @@
     protected function _fetchFromApi()
     {
       return \CURL::init($this->_getUrl())
-        ->setCustomRequest($this->_getRequestMethod())
+        ->addHttpHeader('Content-type', 'application/json')
+        ->setPost(TRUE)
         ->setPostFields($this->_getData())
         ->setReturnTransfer(TRUE)
         ->execute();
