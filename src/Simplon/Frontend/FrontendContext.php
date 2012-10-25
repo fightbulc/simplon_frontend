@@ -5,7 +5,7 @@
   class FrontendContext
   {
     /** @var static */
-    private static $_instance;
+    protected static $_instance;
 
     // ##########################################
 
@@ -29,7 +29,7 @@
      */
     public function getConfigPath()
     {
-      return __DIR__ . '/../../config/common.config.php';
+      return __DIR__ . '/../../../../../../app/config/common.config.php';
     }
 
     // ##########################################
