@@ -18,9 +18,11 @@
 
     "require": {
         "php": ">=5.3.3",
-        "simplon/config": "dev-master",
-        "fightbulc/php_curl": "dev-master",
-        "mustache/mustache": "2.0.2"
+        "simplon/config":"dev-master",
+        "simplon/router":"dev-master",
+        "simplon/form":"dev-master",
+        "fightbulc/php_curl":"dev-master",
+        "mustache/mustache":"2.0.2"
     },
 
     "autoload": {
