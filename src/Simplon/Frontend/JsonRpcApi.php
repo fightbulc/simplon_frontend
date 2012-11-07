@@ -211,7 +211,7 @@
       return array(
         "id"     => $this->_getId(),
         "method" => $this->_getMethod(),
-        "params" => array($data),
+        "params" => $data,
       );
     }
 
