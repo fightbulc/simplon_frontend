@@ -50,7 +50,14 @@
       // valid json-rpc response
       if(! isset($data['result']))
       {
-        $this->_throwError('Invalid JSON-RPC response');
+        $error = '';
+
+        if(isset($data['error']))
+        {
+          $error = json_encode($data['error']);
+        }
+
+        $this->_throwError('Invalid JSON-RPC response: ' . $error);
       }
 
       // and out
