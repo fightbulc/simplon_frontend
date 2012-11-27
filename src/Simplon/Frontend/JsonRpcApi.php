@@ -10,18 +10,6 @@
     // ##########################################
 
     /**
-     * Chaining before PHP 5.4
-     *
-     * @return JsonRpcApi
-     */
-    public static function init()
-    {
-      return new JsonRpcApi();
-    }
-
-    // ##########################################
-
-    /**
      * @param $message
      * @throws \Exception
      */
