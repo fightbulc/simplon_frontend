@@ -32,6 +32,22 @@
     // ##########################################
 
     /**
+     * @param \Phly\Mustache\Pragma\AbstractPragma $pragma
+     * @return Template
+     */
+    public function addPragma(AbstractPragma $pragma)
+    {
+      $this
+        ->_getMustacheInstance()
+        ->getRenderer()
+        ->addPragma($pragma);
+
+      return $this;
+    }
+
+    // ##########################################
+
+    /**
      * @param $templatePath
      * @return Template
      */
