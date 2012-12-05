@@ -3,6 +3,7 @@
   namespace Simplon\Frontend;
 
   use Phly\Mustache\Mustache;
+  use Phly\Mustache\Pragma;
 
   class Template
   {
@@ -32,10 +33,10 @@
     // ##########################################
 
     /**
-     * @param \Phly\Mustache\Pragma\AbstractPragma $pragma
+     * @param \Phly\Mustache\Pragma $pragma
      * @return Template
      */
-    public function addPragma(AbstractPragma $pragma)
+    public function addPragma(Pragma $pragma)
     {
       $this
         ->_getMustacheInstance()
