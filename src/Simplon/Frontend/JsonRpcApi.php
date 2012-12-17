@@ -25,12 +25,23 @@
      */
     protected function _fetchFromApi()
     {
-      $response = \CURL::init($this->_getUrl())
+      // create request
+      $curl = \CURL::init($this->_getUrl())
         ->addHttpHeader('Content-type', 'application/json')
         ->setPost(TRUE)
         ->setPostFields($this->_getDataAsJson())
-        ->setReturnTransfer(TRUE)
-        ->execute();
+        ->setReturnTransfer(TRUE);
+
+      // use proxy
+      if($this->hasProxy())
+      {
+        $curl
+          ->setProxy($this->getProxyHost())
+          ->setProxyPort($this->getProxyPort());
+      }
+
+      // send request
+      $response = $curl->execute();
 
       // decode json data
       $data = json_decode($response, TRUE);
@@ -38,14 +49,14 @@
       // valid json-rpc response
       if(! isset($data['result']))
       {
-        $error = '';
+        $error = 'Unknown error.';
 
         if(isset($data['error']))
         {
-          $error = json_encode($data['error']);
+          $error = $data['error'];
         }
 
-        $this->_throwError('Invalid JSON-RPC response: ' . $error);
+        return ['error' => $error];
       }
 
       // and out
@@ -70,7 +81,7 @@
 
     /**
      * @param $key
-     * @return bool|string
+     * @return bool
      */
     protected function _getByKey($key)
     {
@@ -218,6 +229,76 @@
     protected function _getDataAsJson()
     {
       return json_encode($this->_getData());
+    }
+
+    // ##########################################
+
+    /**
+     * @param string $host
+     * @param int $port
+     * @return JsonRpcApi
+     */
+    public function setProxy($host = '127.0.0.1', $port = 8888)
+    {
+      if(isset($host) && isset($port))
+      {
+        $this->_setByKey('useProxy', TRUE);
+        $this->_setByKey('proxyHost', $host);
+        $this->_setByKey('proxyPort', $port);
+      }
+
+      return $this;
+    }
+
+    // ##########################################
+
+    /**
+     * @return bool
+     */
+    protected function hasProxy()
+    {
+      $useProxy = $this->_getByKey('useProxy');
+
+      if(isset($useProxy))
+      {
+        return TRUE;
+      }
+
+      return FALSE;
+    }
+
+    // ##########################################
+
+    /**
+     * @return bool|string
+     */
+    protected function getProxyHost()
+    {
+      $host = $this->_getByKey('proxyHost');
+
+      if(isset($host))
+      {
+        return $host;
+      }
+
+      return FALSE;
+    }
+
+    // ##########################################
+
+    /**
+     * @return bool|string
+     */
+    protected function getProxyPort()
+    {
+      $port = $this->_getByKey('proxyPort');
+
+      if(isset($port))
+      {
+        return $port;
+      }
+
+      return FALSE;
     }
 
     // ##########################################
