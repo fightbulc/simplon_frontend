@@ -307,7 +307,7 @@
      * @return mixed
      * @throws \Exception
      */
-    public function run()
+    public function send()
     {
       if($this->_getUrl() === FALSE)
       {
