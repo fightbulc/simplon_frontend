@@ -21,7 +21,7 @@
     "simplon/config": "dev-master",
     "simplon/router": "dev-master",
     "simplon/form": "dev-master",
-    "fightbulc/php_curl": "dev-master",
+    "fightbulc/php_curl": "1.0.0",
     "phly/mustache": "dev-master"
   },
 
