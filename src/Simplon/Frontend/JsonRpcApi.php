@@ -49,14 +49,7 @@
       // valid json-rpc response
       if(! isset($data['result']))
       {
-        $error = 'Unknown error.';
-
-        if(isset($data['error']))
-        {
-          $error = $data['error'];
-        }
-
-        return ['error' => $error];
+        return ['error' => $data];
       }
 
       // and out
