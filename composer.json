@@ -2,7 +2,7 @@
   "name": "simplon/frontend",
   "description": "JSON-RPC Frontend Library",
   "homepage": "https://github.com/fightbulc/simplon_frontend",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "library",
   "keywords": ["json-rpc-client", "mustache", "form"],
   "license": "MIT",
@@ -17,17 +17,17 @@
   "minimum-stability": "dev",
 
   "require": {
-    "php": ">=5.3.3",
-    "simplon/config": "dev-master",
-    "simplon/router": "dev-master",
-    "simplon/form": "dev-master",
-    "fightbulc/php_curl": "1.0.0",
-    "phly/mustache": "dev-master"
+    "php": ">=5.4",
+    "simplon/config": "0.5.0",
+    "simplon/router": "0.5.1",
+    "simplon/form": "0.5.2",
+    "fightbulc/jsonrpc_curl": "0.5.2",
+    "phly/mustache": "1.2.*"
   },
 
   "autoload": {
     "psr-0": {
-      "Simplon\\Frontend\\": "src/"
+      "Simplon\\Frontend": "src/"
     }
   }
 }
