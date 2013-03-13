@@ -2,7 +2,7 @@
   "name": "simplon/frontend",
   "description": "JSON-RPC Frontend Library",
   "homepage": "https://github.com/fightbulc/simplon_frontend",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "library",
   "keywords": ["json-rpc-client", "mustache", "form"],
   "license": "MIT",
