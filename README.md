@@ -6,3 +6,5 @@
 |___/_|_| |_| |_| .__/|_|\___/|_| |_| |_| |_|  \___/|_| |_|\__\___|_| |_|\__,_|
                 |_|                                                            
 </pre>
+
+Note: I need to clean this whole repo + rethink what it needs etc.
