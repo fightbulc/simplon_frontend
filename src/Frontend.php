@@ -15,18 +15,34 @@ class Frontend
 
     /**
      * @param array $config
-     * @param $rootPath
-     * @param bool $nativeTemplates
      *
      * @return bool
+     * @throws Exception
      */
-    public static function start(array $config, $rootPath, $nativeTemplates = false)
+    public static function start(array $config)
     {
+        if (isset($config['rootPath']) === false)
+        {
+            throw new Exception('Config misses: "rootPath" => ""');
+        }
+
+        if (isset($config['nativeTemplates']) === false)
+        {
+            throw new Exception('Config misses: "nativeTemplates" => true/false');
+        }
+
+        if (isset($config['routes']) === false)
+        {
+            throw new Exception('Config misses: "routes" => []');
+        }
+
+        // --------------------------------------
+
         // set root path
-        self::$rootPath = rtrim($rootPath, '/') . '/../src/App';
+        self::$rootPath = rtrim($config['rootPath'], '/') . '/../src/App';
 
         // set templates type
-        self::$nativeTemplates = $nativeTemplates;
+        self::$nativeTemplates = $config['nativeTemplates'];
 
         // set config
         self::setConfig($config);
