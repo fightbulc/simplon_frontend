@@ -7,4 +7,4 @@
                 |_|                                                            
 </pre>
 
-Current version: 0.6.0
+Current version: 0.6.*

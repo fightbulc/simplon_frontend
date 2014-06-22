@@ -1,6 +1,6 @@
 {
     "name": "simplon/frontend",
-    "description": "JSON-RPC Frontend Library",
+    "description": "Bootstrap Frontend Library",
     "homepage": "https://github.com/fightbulc/simplon_frontend",
     "type": "library",
     "keywords": ["frontend", "controller", "templates", "router", "mustache", "fast", "lightweight"],
