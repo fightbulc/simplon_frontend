@@ -21,6 +21,14 @@ class Frontend
      */
     public static function start(array $config)
     {
+        // set error handler
+        self::setErrorHandler();
+
+        // set exception handler
+        self::setExceptionHandler();
+
+        // --------------------------------------
+
         if (isset($config['rootPath']) === false)
         {
             throw new Exception('Config misses: "rootPath" => ""');
@@ -46,12 +54,6 @@ class Frontend
 
         // set config
         self::setConfig($config);
-
-        // set error handler
-        self::setErrorHandler();
-
-        // set exception handler
-        self::setExceptionHandler();
 
         // observe routes
         echo Router::observe($config['routes']);
