@@ -10,6 +10,9 @@ class Template
     /** @var array */
     protected static $templates = [];
 
+    /** @var bool */
+    protected static $parseLocale = false;
+
     /**
      * @param $templateContext
      * @param array $paramsContext
@@ -145,6 +148,34 @@ class Template
     }
 
     /**
+     * @param bool $enable
+     */
+    public static function setParseLocale($enable)
+    {
+        self::$parseLocale = $enable === true;
+    }
+
+    /**
+     * @param $template
+     *
+     * @return string
+     */
+    protected static function parseLocale($template)
+    {
+        preg_match_all('|{{lang:(.*?)}}|', $template, $localeKeys);
+
+        if (isset($localeKeys[1][0]))
+        {
+            foreach ($localeKeys[1][0] as $key)
+            {
+                $template = str_replace('{{lang:' . $key . '}}', Locale::get($key), $template);
+            }
+        }
+
+        return (string)$template;
+    }
+
+    /**
      * @param $pathTemplate
      * @param array $params
      * @param bool $useNative
@@ -170,6 +201,12 @@ class Template
 
         // parse template
         $template = self::parse($template, $params);
+
+        // parse locale
+        if (self::$parseLocale === true)
+        {
+            $template = self::parseLocale($template);
+        }
 
         // remove left over wrappers
         $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);

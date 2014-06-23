@@ -52,6 +52,21 @@ class Frontend
         // set templates type
         self::$nativeTemplates = $config['nativeTemplates'];
 
+        // handle locale
+        if (isset($config['locale']) && isset($config['default']))
+        {
+            // set available default
+            $availableLocales = [$config['default']];
+
+            if (isset($config['locale']['available']) && is_array($config['locale']['available']))
+            {
+                $availableLocales = $config['locale']['available'];
+            }
+
+            // init locale
+            Locale::init(self::$rootPath . '/Locale', $availableLocales, $config['default']);
+        }
+
         // set config
         self::setConfig($config);
 
@@ -111,6 +126,14 @@ class Frontend
     }
 
     /**
+     * @return bool
+     */
+    public static function hasRequestGetData()
+    {
+        return empty($_GET) === false;
+    }
+
+    /**
      * @return array
      */
     public static function getRequestGetData()
@@ -121,6 +144,14 @@ class Frontend
         }
 
         return [];
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasRequestPostData()
+    {
+        return empty($_POST) === false;
     }
 
     /**
