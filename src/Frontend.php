@@ -64,7 +64,7 @@ class Frontend
             }
 
             // init locale
-            Locale::init(self::$rootPath . '/Locale', $availableLocales, $config['default']);
+            Locale::init(self::$rootPath . '/Locales', $availableLocales, $config['default']);
         }
 
         // set config
