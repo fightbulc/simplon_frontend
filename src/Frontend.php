@@ -52,26 +52,42 @@ class Frontend
         // set templates type
         self::$nativeTemplates = $config['nativeTemplates'];
 
-        // handle locale
-        if (isset($config['locale']) && isset($config['default']))
-        {
-            // set available default
-            $availableLocales = [$config['default']];
-
-            if (isset($config['locale']['available']) && is_array($config['locale']['available']))
-            {
-                $availableLocales = $config['locale']['available'];
-            }
-
-            // init locale
-            Locale::init(self::$rootPath . '/Locales', $availableLocales, $config['default']);
-        }
-
         // set config
         self::setConfig($config);
 
+        // handle locale
+        self::handleLocale();
+
         // observe routes
         echo Router::observe($config['routes']);
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected static function handleLocale()
+    {
+        if (isset(self::$config['locale']) && isset(self::$config['locale']['default']))
+        {
+            // set available by default
+            $availableLocales = [
+                self::$config['locale']['default']
+            ];
+
+            // set available if defined
+            if (isset(self::$config['locale']['available']) && is_array(self::$config['locale']['available']))
+            {
+                $availableLocales = self::$config['locale']['available'];
+            }
+
+            // init locale
+            Locale::init(self::$rootPath . '/Locales', $availableLocales, self::$config['locale']['default']);
+
+            // enable auto parsing locale strings in templates
+            Template::setParseLocale(true);
+        }
 
         return true;
     }

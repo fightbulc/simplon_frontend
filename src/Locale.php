@@ -39,7 +39,7 @@ class Locale
 
         // load default
         self::setLocale($defaultLocale);
-        
+
         return true;
     }
 
@@ -60,7 +60,7 @@ class Locale
      */
     protected static function loadLocaleFile($locale)
     {
-        $pathLocale = self::$rootPathLocale . '/' . $locale . '/locale.json';
+        $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $locale . '-locale.json';
 
         if (file_exists($pathLocale))
         {

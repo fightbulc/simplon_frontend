@@ -166,7 +166,7 @@ class Template
 
         if (isset($localeKeys[1][0]))
         {
-            foreach ($localeKeys[1][0] as $key)
+            foreach ($localeKeys[1] as $key)
             {
                 $template = str_replace('{{lang:' . $key . '}}', Locale::get($key), $template);
             }
