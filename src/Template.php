@@ -13,6 +13,12 @@ class Template
     /** @var bool */
     protected static $parseLocale = false;
 
+    /** @var array */
+    protected static $assetsHeader = [];
+
+    /** @var array */
+    protected static $assetsBody = [];
+
     /**
      * @param $templateContext
      * @param array $paramsContext
@@ -176,6 +182,59 @@ class Template
     }
 
     /**
+     * @param array $pathAssets
+     *
+     * @return bool
+     */
+    public static function addAssets(array $pathAssets)
+    {
+        foreach ($pathAssets as $path)
+        {
+            // add javascript
+            if (strpos($path, '.js') !== false)
+            {
+                self::$assetsBody[] = '<script type="text/javascript" src="' . $path . '"></script>';
+            }
+
+            // add css
+            elseif (strpos($path, '.css') !== false)
+            {
+                self::$assetsHeader[] = '<link rel="stylesheet" href="' . $path . '">';
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $template
+     *
+     * @return string
+     */
+    protected static function handleAssets($template)
+    {
+        if (strpos($template, '</head>') !== false)
+        {
+            // set header in template
+            $template = str_replace('</head>', join("\n", self::$assetsHeader) . '</head>', $template);
+
+            // reset header
+            self::$assetsHeader = [];
+        }
+
+        if (strpos($template, '</body>') !== false)
+        {
+            // set header in template
+            $template = str_replace('</body>', join("\n", self::$assetsBody) . '</body>', $template);
+
+            // reset header
+            self::$assetsBody = [];
+        }
+
+        return (string)$template;
+    }
+
+    /**
      * @param $pathTemplate
      * @param array $params
      * @param bool $useNative
@@ -188,31 +247,40 @@ class Template
         // keep params in context
         self::$params = $params;
 
-        // use native (php)
-        if ($useNative === true)
+        // --------------------------------------
+
+        // mustache templates
+        if ($useNative === false)
         {
-            return self::loadNativeFile($pathTemplate, $params);
+            // load template
+            $template = self::loadMustacheFile($pathTemplate);
+
+            // parse template
+            $template = self::parse($template, $params);
+
+            // parse locale
+            if (self::$parseLocale === true)
+            {
+                $template = self::parseLocale($template);
+            }
+
+            // remove left over wrappers
+            $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);
+
+            // remove left over varibles
+            $template = preg_replace('|{{.*?}}\n*|s', '', $template);
+        }
+
+        // native templates
+        else
+        {
+            $template = self::loadNativeFile($pathTemplate, $params);
         }
 
         // --------------------------------------
 
-        // load template
-        $template = self::loadMustacheFile($pathTemplate);
-
-        // parse template
-        $template = self::parse($template, $params);
-
-        // parse locale
-        if (self::$parseLocale === true)
-        {
-            $template = self::parseLocale($template);
-        }
-
-        // remove left over wrappers
-        $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);
-
-        // remove left over varibles
-        $template = preg_replace('|{{.*?}}\n*|s', '', $template);
+        // handle assets
+        $template = self::handleAssets($template);
 
         return (string)$template;
     }
