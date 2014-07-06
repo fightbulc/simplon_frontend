@@ -26,7 +26,7 @@ class Locale
      *
      * @return bool
      */
-    public static function init($rootPathLocale, $availableLocales = [], $defaultLocale = 'en')
+    public static function init($rootPathLocale, $availableLocales = [], $defaultLocale = 'en', $defaultGroup = 'default')
     {
         // set root path
         self::$rootPathLocale = rtrim($rootPathLocale, '/');
@@ -38,7 +38,7 @@ class Locale
         self::$defaultLocale = $defaultLocale;
 
         // load default
-        self::setLocale($defaultLocale);
+        self::setLocale($defaultLocale, $defaultGroup);
 
         return true;
     }
@@ -58,9 +58,9 @@ class Locale
      *
      * @throws Exception
      */
-    protected static function loadLocaleFile($locale)
+    protected static function loadLocaleFile($locale, $group = 'default')
     {
-        $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $locale . '-locale.json';
+        $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $group . '-locale.json';
 
         if (file_exists($pathLocale))
         {
@@ -69,7 +69,7 @@ class Locale
             return true;
         }
 
-        throw new Exception('Missing locale "' . $locale . '" (assumed path: ' . $pathLocale . ')');
+        throw new Exception('Missing locale "' . $locale . '/' . $group . '" (assumed path: ' . $pathLocale . ')');
     }
 
     /**
@@ -78,7 +78,7 @@ class Locale
      * @return bool
      * @throws Exception
      */
-    public static function setLocale($locale)
+    public static function setLocale($locale, $group = 'default')
     {
         // validated locale
         if (self::isValidLocale($locale) === false)
@@ -90,7 +90,7 @@ class Locale
         self::$currentLocale = $locale;
 
         // get locale content
-        self::loadLocaleFile($locale);
+        self::loadLocaleFile($locale, $group);
 
         return true;
     }
