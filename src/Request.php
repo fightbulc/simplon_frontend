@@ -95,4 +95,13 @@ class Request
 
         return (array)$decoded;
     }
+
+    /**
+     * @param string $url
+     */
+    public static function redirect($url)
+    {
+        header('Location: ' . $url);
+        exit;
+    }
 }

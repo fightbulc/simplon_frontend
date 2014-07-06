@@ -184,6 +184,44 @@ class Frontend
     }
 
     /**
+     * @return bool
+     */
+    public static function hasSessionData()
+    {
+        return empty($_SESSION) === false;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSessionData()
+    {
+        if (isset($_SESSION))
+        {
+            return (array)$_SESSION;
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array $data
+     */
+    public static function setSessionData(array $data)
+    {
+        $_SESSION = $data;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public static function addSessionData($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    /**
      * @param $pathTemplate
      * @param array $params
      *
