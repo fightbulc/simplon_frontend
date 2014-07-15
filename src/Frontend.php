@@ -205,23 +205,6 @@ class Frontend
     }
 
     /**
-     * @param array $data
-     */
-    public static function setSessionData(array $data)
-    {
-        $_SESSION = $data;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public static function addSessionData($key, $value)
-    {
-        $_SESSION[$key] = $value;
-    }
-
-    /**
      * @param $pathTemplate
      * @param array $params
      *
