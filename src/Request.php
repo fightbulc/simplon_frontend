@@ -9,7 +9,7 @@ class Request
      *
      * @return bool|string
      */
-    protected static function request(array $opt)
+    protected static function process(array $opt)
     {
         $curl = curl_init();
         curl_setopt_array($curl, $opt);
@@ -37,7 +37,7 @@ class Request
             CURLOPT_RETURNTRANSFER => 1
         ];
 
-        return self::request($opt);
+        return self::process($opt);
     }
 
     /**
@@ -55,7 +55,7 @@ class Request
             CURLOPT_POSTFIELDS     => $data
         ];
 
-        return self::request($opt);
+        return self::process($opt);
     }
 
     /**
@@ -83,7 +83,7 @@ class Request
         ];
 
         // request
-        $response = self::request($opt);
+        $response = self::process($opt);
 
         // decode json
         $decoded = json_decode($response, true);
