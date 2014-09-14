@@ -140,4 +140,4 @@ class Locale
 
         return (string)$string;
     }
-} 
+}
