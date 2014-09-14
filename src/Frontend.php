@@ -7,87 +7,28 @@ class Frontend
     /** @var  array */
     protected static $config;
 
-    /** @var  string */
-    protected static $rootPath;
-
-    /** @var  bool */
-    protected static $nativeTemplates;
-
     /**
-     * @param array $config
+     * @param array $configCommon
+     * @param array $configEnv
      *
      * @return bool
-     * @throws Exception
      */
-    public static function start(array $config)
+    public static function start(array $configCommon, array $configEnv = [])
     {
+        // set config
+        self::setConfig($configCommon, $configEnv);
+
         // set error handler
         self::setErrorHandler();
 
         // set exception handler
         self::setExceptionHandler();
 
-        // --------------------------------------
-
-        if (isset($config['rootPath']) === false)
-        {
-            throw new Exception('Config misses: "rootPath" => ""');
-        }
-
-        if (isset($config['nativeTemplates']) === false)
-        {
-            throw new Exception('Config misses: "nativeTemplates" => true/false');
-        }
-
-        if (isset($config['routes']) === false)
-        {
-            throw new Exception('Config misses: "routes" => []');
-        }
-
-        // --------------------------------------
-
-        // set root path
-        self::$rootPath = rtrim($config['rootPath'], '/') . '/../src/App';
-
-        // set templates type
-        self::$nativeTemplates = $config['nativeTemplates'];
-
-        // set config
-        self::setConfig($config);
-
         // handle locale
         self::handleLocale();
 
         // observe routes
-        echo Router::observe($config['routes']);
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected static function handleLocale()
-    {
-        if (isset(self::$config['locale']) && isset(self::$config['locale']['default']))
-        {
-            // set available by default
-            $availableLocales = [
-                self::$config['locale']['default']
-            ];
-
-            // set available if defined
-            if (isset(self::$config['locale']['available']) && is_array(self::$config['locale']['available']))
-            {
-                $availableLocales = self::$config['locale']['available'];
-            }
-
-            // init locale
-            Locale::init(self::$rootPath . '/Locales', $availableLocales, self::$config['locale']['default']);
-
-            // enable auto parsing locale strings in templates
-            Template::setParseLocale(true);
-        }
+        echo Router::observe(self::getConfigByKeys(['routes']));
 
         return true;
     }
@@ -101,13 +42,14 @@ class Frontend
     }
 
     /**
-     * @param array $config
+     * @param array $configCommon
+     * @param array $configEnv
      *
      * @return bool
      */
-    public static function setConfig(array $config)
+    public static function setConfig(array $configCommon, array $configEnv = [])
     {
-        self::$config = $config;
+        self::$config = array_merge($configCommon, $configEnv);
 
         return true;
     }
@@ -115,19 +57,19 @@ class Frontend
     /**
      * @param array $keys
      *
-     * @return array|bool
+     * @return mixed|bool
      * @throws Exception
      */
     public static function getConfigByKeys(array $keys)
     {
         $config = self::getConfig();
-        $keysString = join('-->', $keys);
+        $keysString = join(' => ', $keys);
 
         while ($key = array_shift($keys))
         {
             if (isset($config[$key]) === false)
             {
-                throw new Exception('Config entry for "' . $keysString . '" is missing.');
+                throw new Exception('Config entry for [' . $keysString . '] is missing.');
             }
 
             $config = $config[$key];
@@ -139,6 +81,38 @@ class Frontend
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected static function handleLocale()
+    {
+        if (isset(self::$config['templates']['locale']) && isset(self::$config['templates']['locale']['default']))
+        {
+            // set available by default
+            $availableLocales = [
+                self::$config['templates']['locale']['default']
+            ];
+
+            // set available if defined
+            if (isset(self::$config['templates']['locale']['available']) && is_array(self::$config['templates']['locale']['available']))
+            {
+                $availableLocales = self::$config['templates']['locale']['available'];
+            }
+
+            // init locale
+            Locale::init(
+                self::getConfigByKeys(['paths', 'src']) . '/Locales',
+                $availableLocales,
+                self::$config['templates']['locale']['default']
+            );
+
+            // enable auto parsing locale strings in templates
+            Template::setParseLocale(true);
+        }
+
+        return true;
     }
 
     /**
@@ -213,9 +187,9 @@ class Frontend
     public static function renderTemplate($pathTemplate, $params = [])
     {
         return Template::render(
-            self::$rootPath . '/Views/Templates/' . $pathTemplate,
+            self::getConfigByKeys(['paths', 'src']) . '/Views/Templates/' . $pathTemplate,
             $params,
-            self::$nativeTemplates
+            self::getConfigByKeys(['templates', 'isNative'])
         );
     }
 
