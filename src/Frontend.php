@@ -96,14 +96,19 @@ class Frontend
             ];
 
             // set available if defined
-            if (isset(self::$config['templates']['locale']['available']) && is_array(self::$config['templates']['locale']['available']))
+            $hasAvailableLocales =
+                isset(self::$config['templates']['locale']['available'])
+                && is_array(self::$config['templates']['locale']['available'])
+                && empty(self::$config['templates']['locale']['available']) === false;
+
+            if ($hasAvailableLocales)
             {
                 $availableLocales = self::$config['templates']['locale']['available'];
             }
 
             // init locale
             Locale::init(
-                self::getConfigByKeys(['paths', 'src']) . '/Locales',
+                rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
                 $availableLocales,
                 self::$config['templates']['locale']['default']
             );
@@ -187,7 +192,7 @@ class Frontend
     public static function renderTemplate($pathTemplate, $params = [])
     {
         return Template::render(
-            self::getConfigByKeys(['paths', 'src']) . '/Views/Templates/' . $pathTemplate,
+            rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate,
             $params,
             self::getConfigByKeys(['templates', 'isNative'])
         );
