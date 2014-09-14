@@ -261,12 +261,6 @@ class Template
             // parse template
             $template = self::parse($template, $params);
 
-            // parse locale
-            if (self::$parseLocale === true)
-            {
-                $template = self::parseLocale($template);
-            }
-
             // remove left over wrappers
             $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);
 
@@ -281,6 +275,12 @@ class Template
         }
 
         // --------------------------------------
+
+        // parse locale
+        if (self::$parseLocale === true)
+        {
+            $template = self::parseLocale($template);
+        }
 
         // handle assets
         $template = self::handleAssets($template);
