@@ -20,9 +20,10 @@ class Locale
     protected static $localeContent = [];
 
     /**
-     * @param string $rootPathLocale
+     * @param $rootPathLocale
      * @param array $availableLocales
      * @param string $defaultLocale
+     * @param string $defaultGroup
      *
      * @return bool
      */
@@ -54,17 +55,28 @@ class Locale
     }
 
     /**
-     * @param string $locale
+     * @param $locale
+     * @param string $group
      *
      * @throws Exception
      */
     protected static function loadLocaleFile($locale, $group = 'default')
     {
+        $localeFileCacheKey = $locale . '-' . $group;
+
+        // is locale already cached
+        if (isset(self::$localeContent[$localeFileCacheKey]))
+        {
+            return true;
+        }
+
+        // --------------------------------------
+
         $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $group . '-locale.json';
 
         if (file_exists($pathLocale))
         {
-            self::$localeContent = json_decode(file_get_contents($pathLocale), true);
+            self::$localeContent[$locale . '-' . $group] = json_decode(file_get_contents($pathLocale), true);
 
             return true;
         }
@@ -73,7 +85,8 @@ class Locale
     }
 
     /**
-     * @param string $locale
+     * @param $locale
+     * @param string $group
      *
      * @return bool
      * @throws Exception
@@ -89,28 +102,32 @@ class Locale
         // cache locale
         self::$currentLocale = $locale;
 
-        // get locale content
-        self::loadLocaleFile($locale, $group);
-
         return true;
     }
 
     /**
+     * @param string $group
      * @param string $key
      * @param array $params
      *
      * @return string
      */
-    public static function get($key, $params = [])
+    public static function get($group, $key, $params = [])
     {
+        // make sure that we have the locale content
+        self::loadLocaleFile(self::$currentLocale, $group);
+
+        // build locale/group key
+        $localeFileCacheKey = self::$currentLocale . '-' . $group;
+
         // return key if we don't have anything
-        if (isset(self::$localeContent[$key]) === false)
+        if (isset(self::$localeContent[$localeFileCacheKey][$key]) === false)
         {
             return $key;
         }
 
         // get string
-        $string = self::$localeContent[$key];
+        $string = self::$localeContent[$localeFileCacheKey][$key];
 
         // replace params
         if (empty($params) === false)

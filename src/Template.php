@@ -168,13 +168,16 @@ class Template
      */
     protected static function parseLocale($template)
     {
-        preg_match_all('|{{lang:(.*?)}}|', $template, $localeKeys);
+        // lang:group:key
+        preg_match_all('|{{lang:(.*?):(.*?)}}|', $template, $localeKeys);
 
         if (isset($localeKeys[1][0]))
         {
-            foreach ($localeKeys[1] as $key)
+            foreach ($localeKeys[1] as $index => $key)
             {
-                $template = str_replace('{{lang:' . $key . '}}', Locale::get($key), $template);
+                $langKey = 'lang:' . $localeKeys[1][$index] . ':' . $localeKeys[2][$index];
+                $langString = Locale::get($localeKeys[1][$index], $localeKeys[2][$index]);
+                $template = str_replace('{{' . $langKey . '}}', $langString, $template);
             }
         }
 
