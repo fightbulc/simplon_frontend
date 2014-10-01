@@ -23,11 +23,10 @@ class Locale
      * @param $rootPathLocale
      * @param array $availableLocales
      * @param string $defaultLocale
-     * @param string $defaultGroup
      *
      * @return bool
      */
-    public static function init($rootPathLocale, $availableLocales = [], $defaultLocale = 'en', $defaultGroup = 'default')
+    public static function init($rootPathLocale, $availableLocales = [], $defaultLocale = 'en')
     {
         // set root path
         self::$rootPathLocale = rtrim($rootPathLocale, '/');
@@ -39,7 +38,7 @@ class Locale
         self::$defaultLocale = $defaultLocale;
 
         // load default
-        self::setLocale($defaultLocale, $defaultGroup);
+        self::setLocale($defaultLocale);
 
         return true;
     }
@@ -58,11 +57,12 @@ class Locale
      * @param $locale
      * @param string $group
      *
+     * @return bool
      * @throws Exception
      */
     protected static function loadLocaleFile($locale, $group = 'default')
     {
-        $localeFileCacheKey = $locale . '-' . $group;
+        $localeFileCacheKey = $locale . '/' . $group;
 
         // is locale already cached
         if (isset(self::$localeContent[$localeFileCacheKey]))
@@ -70,13 +70,12 @@ class Locale
             return true;
         }
 
-        // --------------------------------------
+        // file path
+        $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $group . '-locale.php';
 
-        $pathLocale = self::$rootPathLocale . '/' . $locale . '/' . $group . '-locale.json';
-
-        if (file_exists($pathLocale))
+        if (file_exists($pathLocale) === true)
         {
-            self::$localeContent[$locale . '-' . $group] = json_decode(file_get_contents($pathLocale), true);
+            self::$localeContent[$locale . '-' . $group] = require $pathLocale;
 
             return true;
         }
@@ -86,12 +85,11 @@ class Locale
 
     /**
      * @param $locale
-     * @param string $group
      *
      * @return bool
      * @throws Exception
      */
-    public static function setLocale($locale, $group = 'default')
+    public static function setLocale($locale)
     {
         // validated locale
         if (self::isValidLocale($locale) === false)

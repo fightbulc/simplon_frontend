@@ -88,30 +88,27 @@ class Frontend
      */
     protected static function handleLocale()
     {
-        if (isset(self::$config['templates']['locale']) && isset(self::$config['templates']['locale']['default']))
+        if (isset(self::$config['locales']) && isset(self::$config['locales']['default']))
         {
             // set available by default
             $availableLocales = [
-                self::$config['templates']['locale']['default']
+                self::$config['locales']['default']
             ];
 
             // set available if defined
             $hasAvailableLocales =
-                isset(self::$config['templates']['locale']['available'])
-                && is_array(self::$config['templates']['locale']['available'])
-                && empty(self::$config['templates']['locale']['available']) === false;
+                isset(self::$config['locales']['available'])
+                && is_array(self::$config['locales']['available'])
+                && empty(self::$config['locales']['available']) === false;
 
             if ($hasAvailableLocales)
             {
-                $availableLocales = self::$config['templates']['locale']['available'];
+                $availableLocales = self::$config['locales']['available'];
             }
 
             // init locale
-            Locale::init(
-                rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
-                $availableLocales,
-                self::$config['templates']['locale']['default']
-            );
+            $pathLocales = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales';
+            Locale::init($pathLocales, $availableLocales, self::$config['locales']['default']);
 
             // enable auto parsing locale strings in templates
             Template::setParseLocale(true);
@@ -191,11 +188,9 @@ class Frontend
      */
     public static function renderTemplate($pathTemplate, $params = [])
     {
-        return Template::render(
-            rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate,
-            $params,
-            self::getConfigByKeys(['templates', 'isNative'])
-        );
+        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
+
+        return Template::render($pathTemplate, $params, self::getConfigByKeys(['templates', 'isNative']));
     }
 
     /**
