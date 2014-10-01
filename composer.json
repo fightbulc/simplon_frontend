@@ -3,7 +3,15 @@
     "description": "Bootstrap Frontend Library",
     "homepage": "https://github.com/fightbulc/simplon_frontend",
     "type": "library",
-    "keywords": ["frontend", "controller", "templates", "router", "mustache", "fast", "lightweight"],
+    "keywords": [
+        "frontend",
+        "controller",
+        "templates",
+        "router",
+        "mustache",
+        "fast",
+        "lightweight"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -12,11 +20,10 @@
             "role": "developer"
         }
     ],
-
     "require": {
-        "php": ">=5.3"
+        "php": ">=5.4",
+        "simplon/form": "dev-develop"
     },
-
     "autoload": {
         "psr-4": {
             "Simplon\\Frontend\\": "src/"
