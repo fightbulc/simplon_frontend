@@ -22,6 +22,12 @@
             "role": "developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/fightbulc/simplon_form"
+        }
+    ],
     "require": {
         "php": ">=5.4",
         "simplon/form": "dev-develop"
