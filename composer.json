@@ -9,6 +9,8 @@
         "templates",
         "router",
         "mustache",
+        "locales",
+        "i18n",
         "fast",
         "lightweight"
     ],
