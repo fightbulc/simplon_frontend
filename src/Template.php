@@ -32,7 +32,7 @@ class Template
             if (is_array($val))
             {
                 // find loops
-                preg_match_all('|{{#' . $key . '}}(.*?){{/' . $key . '}}|s', $templateContext, $foreachPattern);
+                preg_match_all('|{{#' . $key . '}}(.*?){{/' . $key . '}}|sm', $templateContext, $foreachPattern);
 
                 // handle loops
                 if (isset($foreachPattern[1][0]))
@@ -260,12 +260,6 @@ class Template
 
             // parse template
             $template = self::parse($template, $params);
-
-            // remove left over wrappers
-            $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);
-
-            // remove left over varibles
-            $template = preg_replace('|{{.*?}}\n*|s', '', $template);
         }
 
         // native templates
@@ -284,6 +278,12 @@ class Template
 
         // handle assets
         $template = self::handleAssets($template);
+
+        // remove left over wrappers
+        $template = preg_replace('|{{.*?}}.*?{{/.*?}}\n*|s', '', $template);
+
+        // remove left over variables
+        $template = preg_replace('|{{.*?}}\n*|s', '', $template);
 
         return (string)$template;
     }
