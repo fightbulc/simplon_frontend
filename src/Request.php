@@ -98,10 +98,34 @@ class Request
 
     /**
      * @param string $url
+     * @param array $params
+     *
+     * @return string
      */
-    public static function redirect($url)
+    public static function getUrl($url, array $params = [])
     {
-        header('Location: ' . $url);
+        // replace placeholders
+        if (empty($params) === false)
+        {
+            foreach ($params as $k => $v)
+            {
+                $url = str_replace('{{' . $k . '}}', $v, $url);
+            }
+        }
+
+        return (string)$url;
+    }
+
+    /**
+     * @param string $url
+     * @param array $params
+     */
+    public static function redirect($url, array $params = [])
+    {
+        // redirect now
+        header('Location: ' . self::getUrl($url, $params));
+
+        // exit script
         exit;
     }
 }
