@@ -32,13 +32,28 @@ class Router
     }
 
     /**
+     * @param $controller
+     * @param array $params
+     *
      * @return string
      */
-    protected static function show404()
+    protected static function callControllerAction($controller, array $params = [])
+    {
+        list($controller, $method) = explode('::', $controller);
+
+        return (string)call_user_func_array([(new $controller), $method], $params);
+    }
+
+    /**
+     * @param $route
+     *
+     * @return string
+     */
+    protected static function show404($route)
     {
         header('HTTP/1.1 404 Not Found');
 
-        return '404';
+        return self::callControllerAction($route);
     }
 
     /**
@@ -53,18 +68,15 @@ class Router
 
         // --------------------------------------
 
-        foreach ($routes as $route)
+        foreach ($routes['routes'] as $route)
         {
             if (preg_match_all('#' . $route['pattern'] . '/*#i', self::$route, $match, PREG_SET_ORDER))
             {
                 // handle request method restrictions
-                if (isset($route['request']) && strtoupper($route['request']) !== self::$request)
+                if (isset($route['request']) && strpos(strtoupper($route['request']), self::$request) === false)
                 {
                     continue;
                 }
-
-                // get controller and method
-                list($controller, $method) = explode('::', $route['controller']);
 
                 // prepare params
                 $params = [];
@@ -79,12 +91,12 @@ class Router
                 }
 
                 // run controller
-                return (string)call_user_func_array([(new $controller), $method], $params);
+                return self::callControllerAction($route['controller'], $params);
             }
         }
 
         // --------------------------------------
 
-        return self::show404();
+        return self::show404($routes['custom']['404']);
     }
-} 
+}
