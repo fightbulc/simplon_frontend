@@ -8,12 +8,13 @@ class Frontend
     protected static $config;
 
     /**
+     * @param array $routes
      * @param array $configCommon
      * @param array $configEnv
      *
      * @return bool
      */
-    public static function start(array $configCommon, array $configEnv = [])
+    public static function start(array $routes, array $configCommon, array $configEnv = [])
     {
         // set config
         self::setConfig($configCommon, $configEnv);
@@ -28,7 +29,7 @@ class Frontend
         self::handleLocale();
 
         // observe routes
-        echo Router::observe(self::getConfigByKeys(['routes']));
+        echo Router::observe($routes);
 
         return true;
     }
@@ -160,10 +161,17 @@ class Frontend
     }
 
     /**
+     * @param null $key
+     *
      * @return bool
      */
-    public static function hasSessionData()
+    public static function hasSessionData($key = null)
     {
+        if ($key !== null)
+        {
+            return isset($_SESSION[$key]) === true;
+        }
+
         return empty($_SESSION) === false;
     }
 
