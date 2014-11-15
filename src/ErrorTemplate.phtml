@@ -1,0 +1,79 @@
+<?php
+/**
+ * @var \Simplon\Error\ErrorResponse $errorResponse
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>An error occured</title>
+    <style type="text/css">
+        body
+        {
+            font-family: 'Open Sans', sans-serif;
+            background: #F77;
+            margin: 20px;
+        }
+
+        #content
+        {
+            background: #fff;
+            padding: 10px 30px;
+            border-radius: 4px;
+        }
+
+        h1
+        {
+            font-weight: normal;
+            margin: 20px 0 5px;
+        }
+
+        h1 span
+        {
+            color: #c00;
+        }
+
+        #date
+        {
+            font-size: 16px;
+            color: #777;
+            margin: 0 0 30px;
+        }
+
+        strong
+        {
+            display: block;
+            padding: 10px 20px;
+            background: #efefef;
+            text-transform: capitalize;
+        }
+
+        pre
+        {
+            margin: 0 0 20px;
+            background: #fee;
+            padding: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>
+            <span><?php echo $errorResponse->getHttpCode() ?></span>&nbsp;<?php echo $errorResponse->getMessage() ?>
+        </h1>
+
+        <div id="date">Date/Time: <?php echo (new DateTime())->format('c') ?></div>
+
+        <?php foreach ($errorResponse->getData() as $k => $v): ?>
+            <div>
+                <strong><?php echo $k ?></strong>
+                <pre><?php echo print_r($v, true) ?></pre>
+            </div>
+        <?php endforeach ?>
+    </div>
+</body>
+</html>

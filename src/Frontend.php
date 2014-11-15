@@ -6,6 +6,7 @@ use Simplon\Error\ErrorHandler;
 use Simplon\Error\ErrorResponse;
 use Simplon\Helper\Config;
 use Simplon\Locale\Locale;
+use Simplon\Phtml\Phtml;
 use Simplon\Router\Router;
 use Simplon\Template\Template;
 
@@ -171,7 +172,7 @@ class Frontend
     private static function handleScriptErrors()
     {
         ErrorHandler::handleScriptErrors(
-            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
         );
     }
 
@@ -181,7 +182,7 @@ class Frontend
     private static function handleFatalErrors()
     {
         ErrorHandler::handleFatalErrors(
-            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
         );
     }
 
@@ -191,7 +192,20 @@ class Frontend
     private static function handleExceptions()
     {
         ErrorHandler::handleExceptions(
-            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
         );
+    }
+
+    /**
+     * @param ErrorResponse $errorResponse
+     *
+     * @return string
+     */
+    private static function handleErrorTemplate(ErrorResponse $errorResponse)
+    {
+        // set http status
+        http_response_code($errorResponse->getHttpCode());
+
+        return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorResponse' => $errorResponse]);
     }
 }
