@@ -18,12 +18,18 @@
     "authors": [
         {
             "name": "Tino Ehrich",
-            "email": "opensource@efides.com",
+            "email": "tino@bigpun.me",
             "role": "developer"
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "simplon/helper": "0.7.*",
+        "simplon/request": "0.1.*",
+        "simplon/router": "0.1.*",
+        "simplon/locale": "0.1.*",
+        "simplon/template": "0.1.*",
+        "simplon/error": "0.1.*"
     },
     "autoload": {
         "psr-4": {

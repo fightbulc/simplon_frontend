@@ -2,120 +2,56 @@
 
 namespace Simplon\Frontend;
 
+use Simplon\Error\ErrorHandler;
+use Simplon\Error\ErrorResponse;
+use Simplon\Helper\Config;
+use Simplon\Locale\Locale;
+use Simplon\Router\Router;
+use Simplon\Template\Template;
+
 class Frontend
 {
-    /** @var  array */
-    protected static $config;
+    const TEMPLATE_MUSTACHE = 'mustache';
+    const TEMPLATE_PHTML = 'phtml';
+
+    /**
+     * @var array
+     */
+    private static $config;
+
+    /**
+     * @var Locale
+     */
+    private static $locale;
+
+    /**
+     * @var Template
+     */
+    private static $template;
 
     /**
      * @param array $routes
      * @param array $configCommon
      * @param array $configEnv
      *
-     * @return bool
+     * @return string
+     * @throws \Simplon\Router\RouterException
      */
     public static function start(array $routes, array $configCommon, array $configEnv = [])
     {
-        // set config
-        self::setConfig($configCommon, $configEnv);
+        // handle errors
+        self::handleScriptErrors();
+        self::handleFatalErrors();
+        self::handleExceptions();
 
-        // set error handler
-        self::setErrorHandler();
+        // setup config
+        Config::setConfig($configCommon, $configEnv);
 
-        // set exception handler
-        self::setExceptionHandler();
-
-        // handle locale
-        self::handleLocale();
+        // setup locale
+        self::setupLocale();
 
         // observe routes
-        echo Router::observe($routes);
-
-        return true;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getConfig()
-    {
-        return (array)self::$config;
-    }
-
-    /**
-     * @param array $configCommon
-     * @param array $configEnv
-     *
-     * @return bool
-     */
-    public static function setConfig(array $configCommon, array $configEnv = [])
-    {
-        self::$config = array_merge($configCommon, $configEnv);
-
-        return true;
-    }
-
-    /**
-     * @param array $keys
-     *
-     * @return mixed|bool
-     * @throws Exception
-     */
-    public static function getConfigByKeys(array $keys)
-    {
-        $config = self::getConfig();
-        $keysString = join(' => ', $keys);
-
-        while ($key = array_shift($keys))
-        {
-            if (isset($config[$key]) === false)
-            {
-                throw new Exception('Config entry for [' . $keysString . '] is missing.');
-            }
-
-            $config = $config[$key];
-        }
-
-        if (!empty($config))
-        {
-            return $config;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    protected static function handleLocale()
-    {
-        if (isset(self::$config['locales']) && isset(self::$config['locales']['default']))
-        {
-            // set available by default
-            $availableLocales = [
-                self::$config['locales']['default']
-            ];
-
-            // set available if defined
-            $hasAvailableLocales =
-                isset(self::$config['locales']['available'])
-                && is_array(self::$config['locales']['available'])
-                && empty(self::$config['locales']['available']) === false;
-
-            if ($hasAvailableLocales)
-            {
-                $availableLocales = self::$config['locales']['available'];
-            }
-
-            // init locale
-            $pathLocales = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales';
-            Locale::init($pathLocales, $availableLocales, self::$config['locales']['default']);
-
-            // enable auto parsing locale strings in templates
-            Template::setParseLocale(true);
-        }
-
-        return true;
+        return Router::observe($routes);
     }
 
     /**
@@ -193,94 +129,139 @@ class Frontend
      * @param array $params
      *
      * @return string
+     * @throws FrontendException
      */
-    public static function renderTemplate($pathTemplate, $params = [])
+    public static function renderMustacheTemplate($pathTemplate, $params = [])
     {
-        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
+        return self::renderTemplate(self::TEMPLATE_MUSTACHE, $pathTemplate, $params);
+    }
 
-        return Template::render($pathTemplate, $params, self::getConfigByKeys(['templates', 'isNative']));
+    /**
+     * @param $pathTemplate
+     * @param array $params
+     *
+     * @return string
+     * @throws FrontendException
+     */
+    public static function renderPhtmlTemplate($pathTemplate, $params = [])
+    {
+        return self::renderTemplate(self::TEMPLATE_PHTML, $pathTemplate, $params);
+    }
+
+    /**
+     * @param $type
+     * @param $pathTemplate
+     * @param array $params
+     *
+     * @return string
+     * @throws FrontendException
+     * @throws \Simplon\Helper\HelperException
+     */
+    private static function renderTemplate($type, $pathTemplate, array $params = [])
+    {
+        if (self::$template === null)
+        {
+            self::$template = new Template();
+        }
+
+        // set complete path
+        $pathTemplate = rtrim(Config::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
+
+        switch ($type)
+        {
+            case self::TEMPLATE_MUSTACHE:
+                $customParsers = [
+                    [
+                        'pattern'  => '{{lang:(.*?):(.*?)}}',
+                        'callback' => function ($template, array $match)
+                        {
+                            foreach ($match[1] as $index => $key)
+                            {
+                                $langKey = 'lang:' . $match[1][$index] . ':' . $match[2][$index];
+                                $langString = self::$locale->get($match[1][$index], $match[2][$index]);
+                                $template = str_replace('{{' . $langKey . '}}', $langString, $template);
+                            }
+
+                            return $template;
+                        },
+                    ]
+                ];
+
+                $template = self::$template->renderMustache($pathTemplate, $params, $customParsers);
+                break;
+
+            case self::TEMPLATE_PHTML:
+                $template = self::$template->renderPhtml($pathTemplate, $params);
+                break;
+
+            default:
+                throw new FrontendException('Unknown template type: ' . $type);
+        }
+
+        return $template;
     }
 
     /**
      * @return bool
      */
-    public static function setErrorHandler()
+    private static function setupLocale()
     {
-        set_error_handler(function ($errno, $errstr, $errfile, $errline)
+        if (isset(self::$config['locales']) && isset(self::$config['locales']['default']))
         {
-            switch ($errno)
-            {
-                case E_USER_ERROR:
-                    $error = [
-                        'message' => $errstr,
-                        'code'    => null,
-                        'data'    => [
-                            'type' => 'ERROR',
-                            'file' => $errfile,
-                            'line' => $errline,
-                        ],
-                    ];
-                    break;
-
-                case E_USER_WARNING:
-                    $error = [
-                        'message' => "WARNING: $errstr",
-                        'code'    => $errno,
-                        'data'    => [
-                            'type' => 'WARNING'
-                        ],
-                    ];
-                    break;
-
-                case E_USER_NOTICE:
-                    $error = [
-                        'message' => $errstr,
-                        'code'    => $errno,
-                        'data'    => [
-                            'type' => 'NOTICE',
-                        ],
-                    ];
-                    break;
-
-                default:
-                    $error = [
-                        'message' => $errstr,
-                        'code'    => null,
-                        'data'    => [
-                            'type' => 'UNKNOWN',
-                            'file' => $errfile,
-                            'line' => $errline,
-                        ],
-                    ];
-                    break;
-            }
-
-            die(var_dump($error));
-        });
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function setExceptionHandler()
-    {
-        set_exception_handler(function (\Exception $e)
-        {
-            $error = [
-                'message' => $e->getMessage(),
-                'code'    => $e->getCode(),
-                'data'    => [
-                    'type' => 'EXCEPTION',
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                ]
+            // set available by default
+            $availableLocales = [
+                self::$config['locales']['default']
             ];
 
-            die(var_dump($error));
-        });
+            // set available if defined
+            $hasAvailableLocales =
+                isset(self::$config['locales']['available'])
+                && is_array(self::$config['locales']['available'])
+                && empty(self::$config['locales']['available']) === false;
+
+            if ($hasAvailableLocales)
+            {
+                $availableLocales = self::$config['locales']['available'];
+            }
+
+            // init locale
+            self::$locale = new Locale(
+                rtrim(Config::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
+                $availableLocales,
+                self::$config['locales']['default']
+            );
+        }
 
         return true;
+    }
+
+    /**
+     * @return void
+     */
+    private static function handleScriptErrors()
+    {
+        ErrorHandler::handleScriptErrors(
+            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function handleFatalErrors()
+    {
+        ErrorHandler::handleFatalErrors(
+            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function handleExceptions()
+    {
+        ErrorHandler::handleExceptions(
+            function (ErrorResponse $errorResponse) { return JsonRpcServer::respond($errorResponse); }
+        );
     }
 }
