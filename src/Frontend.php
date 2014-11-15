@@ -16,11 +16,6 @@ class Frontend
     const TEMPLATE_PHTML = 'phtml';
 
     /**
-     * @var array
-     */
-    private static $config;
-
-    /**
      * @var Locale
      */
     private static $locale;
@@ -46,13 +41,42 @@ class Frontend
         self::handleExceptions();
 
         // setup config
-        Config::setConfig($configCommon, $configEnv);
+        self::setConfig($configCommon, $configEnv);
 
         // setup locale
         self::setupLocale();
 
         // observe routes
         return Router::observe($routes);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getConfig()
+    {
+        return Config::getConfig();
+    }
+
+    /**
+     * @param array $keys
+     *
+     * @return bool
+     */
+    public static function hasConfigKeys(array $keys)
+    {
+        return Config::hasConfigKeys($keys);
+    }
+
+    /**
+     * @param array $keys
+     *
+     * @return array|null
+     * @throws \Simplon\Helper\HelperException
+     */
+    public static function getConfigByKeys(array $keys)
+    {
+        return Config::getConfigByKeys($keys);
     }
 
     /**
@@ -80,6 +104,17 @@ class Frontend
     }
 
     /**
+     * @param array $configCommon
+     * @param array $configEnv
+     *
+     * @return bool
+     */
+    private static function setConfig(array $configCommon, array $configEnv = [])
+    {
+        return Config::setConfig($configCommon, $configEnv);
+    }
+
+    /**
      * @param $type
      * @param $pathTemplate
      * @param array $params
@@ -96,7 +131,7 @@ class Frontend
         }
 
         // set complete path
-        $pathTemplate = rtrim(Config::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
+        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
 
         switch ($type)
         {
@@ -137,29 +172,29 @@ class Frontend
      */
     private static function setupLocale()
     {
-        if (isset(self::$config['locales']) && isset(self::$config['locales']['default']))
+        if (self::hasConfigKeys(['locales']) === true && self::hasConfigKeys(['locales', 'default']) === true)
         {
-            // set available by default
-            $availableLocales = [
-                self::$config['locales']['default']
-            ];
+            $availableLocales = [];
 
             // set available if defined
-            $hasAvailableLocales =
-                isset(self::$config['locales']['available'])
-                && is_array(self::$config['locales']['available'])
-                && empty(self::$config['locales']['available']) === false;
-
-            if ($hasAvailableLocales)
+            if (self::hasConfigKeys(['locales', 'available']) && is_array(self::getConfigByKeys(['locales', 'available'])))
             {
-                $availableLocales = self::$config['locales']['available'];
+                $availableLocales = self::getConfigByKeys(['locales', 'available']);
+            }
+
+            // fill up default locale
+            if (empty($availableLocales) === true)
+            {
+                $availableLocales = [
+                    self::getConfigByKeys(['locales', 'default'])
+                ];
             }
 
             // init locale
             self::$locale = new Locale(
-                rtrim(Config::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
+                rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
                 $availableLocales,
-                self::$config['locales']['default']
+                self::getConfigByKeys(['locales', 'default'])
             );
         }
 
