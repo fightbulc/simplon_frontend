@@ -20,6 +20,8 @@
 
         #content
         {
+            width: 800px;
+            margin: auto;
             background: #fff;
             padding: 10px 30px;
             border-radius: 4px;
@@ -51,27 +53,39 @@
             text-transform: capitalize;
         }
 
-        pre
+        p
         {
             margin: 0 0 20px;
             background: #fee;
             padding: 20px;
             color: #555;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
     <div id="content">
-        <h1>
-            <span><?php echo $errorResponse->getHttpCode() ?></span>&nbsp;<?php echo $errorResponse->getMessage() ?>
-        </h1>
+        <div style="text-align: center">
+            <h1>
+                <span><?php echo $errorResponse->getHttpCode() ?></span>&nbsp;<?php echo $errorResponse->getMessage() ?>
+            </h1>
 
-        <div id="date">Date/Time: <?php echo (new DateTime())->format('c') ?></div>
+            <div id="date">Date/Time: <?php echo (new DateTime())->format('c') ?></div>
+        </div>
 
         <?php foreach ($errorResponse->getData() as $k => $v): ?>
             <div>
-                <strong><?php echo $k ?></strong>
-                <pre><?php echo print_r($v, true) ?></pre>
+                <?php if (is_array($v)): ?>
+                    <?php foreach ($v as $sk => $sv): ?>
+                        <div>
+                            <strong><?php echo $sk ?></strong>
+                            <p><?php echo $sv ?></p>
+                        </div>
+                    <?php endforeach ?>
+                <?php else: ?>
+                    <strong><?php echo $k ?></strong>
+                    <p><?php echo $v ?></p>
+                <?php endif ?>
             </div>
         <?php endforeach ?>
     </div>

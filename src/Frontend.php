@@ -47,7 +47,17 @@ class Frontend
         self::setupLocale();
 
         // observe routes
-        return Router::observe($routes);
+        $response = Router::observe($routes);
+
+        // render error page
+        if ($response instanceof ErrorResponse)
+        {
+            return self::handleErrorTemplate($response);
+        }
+
+        // --------------------------------------
+
+        return (string)$response;
     }
 
     /**
