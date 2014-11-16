@@ -12,7 +12,8 @@
         "locales",
         "i18n",
         "fast",
-        "lightweight"
+        "lightweight",
+        "form"
     ],
     "license": "MIT",
     "authors": [
@@ -29,7 +30,8 @@
         "simplon/router": "0.1.*",
         "simplon/locale": "0.1.*",
         "simplon/template": "0.1.*",
-        "simplon/error": "0.1.*"
+        "simplon/error": "0.1.*",
+        "simplon/form": "0.2.*"
     },
     "autoload": {
         "psr-4": {
