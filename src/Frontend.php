@@ -4,6 +4,9 @@ namespace Simplon\Frontend;
 
 use Simplon\Error\ErrorHandler;
 use Simplon\Error\ErrorResponse;
+use Simplon\Form\Form;
+use Simplon\Form\Renderer\MustacheRenderer;
+use Simplon\Form\Renderer\PhtmlRenderer;
 use Simplon\Helper\Config;
 use Simplon\Locale\Locale;
 use Simplon\Phtml\Phtml;
@@ -45,6 +48,9 @@ class Frontend
 
         // setup locale
         self::setupLocale();
+
+        // setup template
+        self::$template = new Template();
 
         // observe routes
         $response = Router::observe($routes);
@@ -90,7 +96,49 @@ class Frontend
     }
 
     /**
-     * @param $pathTemplate
+     * @param $group
+     * @param $key
+     * @param array $params
+     *
+     * @return string
+     */
+    public static function getLocale($group, $key, array $params = [])
+    {
+        return self::$locale->get($group, $key, $params);
+    }
+
+    /**
+     * @param array $pathAssets
+     *
+     * @return bool
+     */
+    public static function addAssetsHeader(array $pathAssets)
+    {
+        foreach ($pathAssets as $pathAsset)
+        {
+            self::$template->addAssetHeader($pathAsset);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $pathAssets
+     *
+     * @return bool
+     */
+    public static function addAssetsBody(array $pathAssets)
+    {
+        foreach ($pathAssets as $pathAsset)
+        {
+            self::$template->addAssetBody($pathAsset);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param string $pathTemplate
      * @param array $params
      *
      * @return string
@@ -102,7 +150,7 @@ class Frontend
     }
 
     /**
-     * @param $pathTemplate
+     * @param string $pathTemplate
      * @param array $params
      *
      * @return string
@@ -111,6 +159,32 @@ class Frontend
     public static function renderPhtmlTemplate($pathTemplate, $params = [])
     {
         return self::renderTemplate(self::TEMPLATE_PHTML, $pathTemplate, $params);
+    }
+
+    /**
+     * @param Form $form
+     * @param string $pathTemplate
+     * @param array $params
+     *
+     * @return string
+     * @throws FrontendException
+     */
+    public static function renderMustacheFormTemplate(Form $form, $pathTemplate, array $params = [])
+    {
+        return self::renderFormTemplate(self::TEMPLATE_MUSTACHE, $form, $pathTemplate, $params);
+    }
+
+    /**
+     * @param Form $form
+     * @param string $pathTemplate
+     * @param array $params
+     *
+     * @return string
+     * @throws FrontendException
+     */
+    public static function renderPhtmlFormTemplate(Form $form, $pathTemplate, array $params = [])
+    {
+        return self::renderFormTemplate(self::TEMPLATE_PHTML, $form, $pathTemplate, $params);
     }
 
     /**
@@ -125,8 +199,8 @@ class Frontend
     }
 
     /**
-     * @param $type
-     * @param $pathTemplate
+     * @param string $type
+     * @param string $pathTemplate
      * @param array $params
      *
      * @return string
@@ -135,11 +209,6 @@ class Frontend
      */
     private static function renderTemplate($type, $pathTemplate, array $params = [])
     {
-        if (self::$template === null)
-        {
-            self::$template = new Template();
-        }
-
         // set complete path
         $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
 
@@ -178,6 +247,37 @@ class Frontend
     }
 
     /**
+     * @param string $type
+     * @param Form $form
+     * @param string $pathTemplate
+     * @param array $params
+     *
+     * @return string
+     * @throws FrontendException
+     */
+    private static function renderFormTemplate($type, Form $form, $pathTemplate, array $params = [])
+    {
+        // set complete path
+        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/Forms/' . $pathTemplate;
+
+        switch ($type)
+        {
+            case self::TEMPLATE_MUSTACHE:
+                $template = (new MustacheRenderer($form))->render($pathTemplate, $params);
+                break;
+
+            case self::TEMPLATE_PHTML:
+                $template = (new PhtmlRenderer($form))->render($pathTemplate, $params);
+                break;
+
+            default:
+                throw new FrontendException('Unknown template type: ' . $type);
+        }
+
+        return $template;
+    }
+
+    /**
      * @return bool
      */
     private static function setupLocale()
@@ -202,7 +302,7 @@ class Frontend
 
             // init locale
             self::$locale = new Locale(
-                rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Locales',
+                rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Locales',
                 $availableLocales,
                 self::getConfigByKeys(['locales', 'default'])
             );
