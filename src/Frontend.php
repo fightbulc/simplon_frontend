@@ -8,9 +8,11 @@ use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheRenderer;
 use Simplon\Form\Renderer\PhtmlRenderer;
 use Simplon\Helper\Config;
+use Simplon\Helper\HelperException;
 use Simplon\Locale\Locale;
 use Simplon\Phtml\Phtml;
 use Simplon\Router\Router;
+use Simplon\Router\RouterException;
 use Simplon\Template\Template;
 
 class Frontend
@@ -32,11 +34,12 @@ class Frontend
      * @param array $routes
      * @param array $configCommon
      * @param array $configEnv
+     * @param null|\Closure $routingDispatcher
      *
      * @return string
-     * @throws \Simplon\Router\RouterException
+     * @throws RouterException
      */
-    public static function start(array $routes, array $configCommon, array $configEnv = [])
+    public static function start(array $routes, array $configCommon, array $configEnv = [], $routingDispatcher = null)
     {
         // handle errors
         self::handleScriptErrors();
@@ -53,7 +56,7 @@ class Frontend
         self::$template = new Template();
 
         // observe routes
-        $response = Router::observe($routes);
+        $response = Router::observe($routes, null, $routingDispatcher);
 
         // render error page
         if ($response instanceof ErrorResponse)
@@ -88,11 +91,29 @@ class Frontend
      * @param array $keys
      *
      * @return array|null
-     * @throws \Simplon\Helper\HelperException
+     * @throws HelperException
      */
     public static function getConfigByKeys(array $keys)
     {
         return Config::getConfigByKeys($keys);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getLocale()
+    {
+        return self::$locale->getCurrentLocale();
+    }
+
+    /**
+     * @param $locale
+     *
+     * @return void
+     */
+    public static function setLocale($locale)
+    {
+        self::$locale->setLocale($locale);
     }
 
     /**
@@ -102,7 +123,7 @@ class Frontend
      *
      * @return string
      */
-    public static function getLocale($group, $key, array $params = [])
+    public static function getTranslation($group, $key, array $params = [])
     {
         return self::$locale->get($group, $key, $params);
     }
@@ -205,7 +226,7 @@ class Frontend
      *
      * @return string
      * @throws FrontendException
-     * @throws \Simplon\Helper\HelperException
+     * @throws HelperException
      */
     private static function renderTemplate($type, $pathTemplate, array $params = [])
     {
