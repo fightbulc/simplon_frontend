@@ -31,15 +31,15 @@ class Frontend
     private static $template;
 
     /**
-     * @param array $routes
      * @param array $configCommon
      * @param array $configEnv
+     * @param array $routes
      * @param null|\Closure $routingDispatcher
      *
      * @return string
      * @throws RouterException
      */
-    public static function start(array $routes, array $configCommon, array $configEnv = [], $routingDispatcher = null)
+    public static function start(array $configCommon, array $configEnv, array $routes, $routingDispatcher = null)
     {
         // handle errors
         self::handleScriptErrors();
@@ -279,7 +279,7 @@ class Frontend
     private static function renderFormTemplate($type, Form $form, $pathTemplate, array $params = [])
     {
         // set complete path
-        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/Forms/' . $pathTemplate;
+        $pathTemplate = rtrim(self::getConfigByKeys(['paths', 'src']), '/') . '/Views/Templates/' . $pathTemplate;
 
         switch ($type)
         {
