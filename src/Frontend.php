@@ -220,6 +220,29 @@ class Frontend
     }
 
     /**
+     * @return array
+     */
+    private static function getMustacheCustomParserLocale()
+    {
+        return [
+            [
+                'pattern'  => '{{lang:(.*?):(.*?)}}',
+                'callback' => function ($template, array $match)
+                {
+                    foreach ($match[1] as $index => $key)
+                    {
+                        $langKey = 'lang:' . $match[1][$index] . ':' . $match[2][$index];
+                        $langString = self::$locale->get($match[1][$index], $match[2][$index]);
+                        $template = str_replace('{{' . $langKey . '}}', $langString, $template);
+                    }
+
+                    return $template;
+                },
+            ]
+        ];
+    }
+
+    /**
      * @param string $type
      * @param string $pathTemplate
      * @param array $params
@@ -236,24 +259,7 @@ class Frontend
         switch ($type)
         {
             case self::TEMPLATE_MUSTACHE:
-                $customParsers = [
-                    [
-                        'pattern'  => '{{lang:(.*?):(.*?)}}',
-                        'callback' => function ($template, array $match)
-                        {
-                            foreach ($match[1] as $index => $key)
-                            {
-                                $langKey = 'lang:' . $match[1][$index] . ':' . $match[2][$index];
-                                $langString = self::$locale->get($match[1][$index], $match[2][$index]);
-                                $template = str_replace('{{' . $langKey . '}}', $langString, $template);
-                            }
-
-                            return $template;
-                        },
-                    ]
-                ];
-
-                $template = self::$template->renderMustache($pathTemplate, $params, $customParsers);
+                $template = self::$template->renderMustache($pathTemplate, $params, self::getMustacheCustomParserLocale());
                 break;
 
             case self::TEMPLATE_PHTML:
@@ -284,7 +290,7 @@ class Frontend
         switch ($type)
         {
             case self::TEMPLATE_MUSTACHE:
-                $template = (new MustacheRenderer($form))->render($pathTemplate, $params);
+                $template = (new MustacheRenderer($form))->render($pathTemplate, $params, self::getMustacheCustomParserLocale());
                 break;
 
             case self::TEMPLATE_PHTML:
