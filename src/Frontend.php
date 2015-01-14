@@ -5,8 +5,8 @@ namespace Simplon\Frontend;
 use Simplon\Error\ErrorHandler;
 use Simplon\Error\ErrorResponse;
 use Simplon\Form\Form;
-use Simplon\Form\Renderer\MustacheRenderer;
-use Simplon\Form\Renderer\PhtmlRenderer;
+use Simplon\Form\Renderer\MustacheFormRenderer;
+use Simplon\Form\Renderer\PhtmlFormRenderer;
 use Simplon\Helper\Config;
 use Simplon\Helper\HelperException;
 use Simplon\Locale\Locale;
@@ -290,11 +290,11 @@ class Frontend
         switch ($type)
         {
             case self::TEMPLATE_MUSTACHE:
-                $template = (new MustacheRenderer($form))->render($pathTemplate, $params, self::getMustacheCustomParserLocale());
+                $template = (new MustacheFormRenderer($form))->render($pathTemplate, $params, self::getMustacheCustomParserLocale());
                 break;
 
             case self::TEMPLATE_PHTML:
-                $template = (new PhtmlRenderer($form))->render($pathTemplate, $params);
+                $template = (new PhtmlFormRenderer($form))->render($pathTemplate, $params);
                 break;
 
             default:
