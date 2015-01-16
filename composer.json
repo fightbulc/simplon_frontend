@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "simplon/helper": "0.7.*",
+        "simplon/helper": "0.8.*",
         "simplon/request": "0.1.*",
         "simplon/router": "0.1.*",
         "simplon/locale": "0.1.*",
