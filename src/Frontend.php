@@ -11,6 +11,8 @@ use Simplon\Helper\Config;
 use Simplon\Helper\HelperException;
 use Simplon\Locale\Locale;
 use Simplon\Phtml\Phtml;
+use Simplon\Request\RedirectResponse;
+use Simplon\Request\Request;
 use Simplon\Router\Router;
 use Simplon\Router\RouterException;
 use Simplon\Template\Template;
@@ -64,7 +66,11 @@ class Frontend
             return self::handleErrorTemplate($response);
         }
 
-        // --------------------------------------
+        // handle redirects
+        if ($response instanceof RedirectResponse)
+        {
+            Request::redirect($response->getUrl());
+        }
 
         return (string)$response;
     }
