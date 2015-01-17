@@ -19,7 +19,7 @@ abstract class AbstractHandlerView
      * @param ResponseInterface $response
      * @param array $opt
      *
-     * @return ResponseInterface|string
+     * @return RedirectResponse|string
      */
     protected function handleResponseType(\Closure $callback, ResponseInterface $response = null, array $opt = [])
     {
