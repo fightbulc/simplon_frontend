@@ -32,11 +32,13 @@ abstract class AbstractHandlerView
 
         if ($response instanceof ErrorResponse)
         {
-            return $callback([
+            $params = [
                 'hasErrors' => true,
                 'message'   => $response->getMessage(),
                 'data'      => $response->getData(),
-            ]);
+            ];
+
+            return $callback(array_merge($opt, $params));
         }
 
         // --------------------------------------
