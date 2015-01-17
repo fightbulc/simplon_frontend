@@ -3,7 +3,7 @@
 namespace Simplon\Frontend;
 
 use Simplon\Error\ErrorHandler;
-use Simplon\Error\ErrorResponse;
+use Simplon\Error\ErrorContext;
 use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheFormRenderer;
 use Simplon\Form\Renderer\PhtmlFormRenderer;
@@ -61,7 +61,7 @@ class Frontend
         $response = Router::observe($routes, null, $routingDispatcher);
 
         // render error page
-        if ($response instanceof ErrorResponse)
+        if ($response instanceof ErrorContext)
         {
             return self::handleErrorTemplate($response);
         }
@@ -350,7 +350,7 @@ class Frontend
     private static function handleScriptErrors()
     {
         ErrorHandler::handleScriptErrors(
-            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
         );
     }
 
@@ -360,7 +360,7 @@ class Frontend
     private static function handleFatalErrors()
     {
         ErrorHandler::handleFatalErrors(
-            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
         );
     }
 
@@ -370,20 +370,20 @@ class Frontend
     private static function handleExceptions()
     {
         ErrorHandler::handleExceptions(
-            function (ErrorResponse $errorResponse) { return self::handleErrorTemplate($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
         );
     }
 
     /**
-     * @param ErrorResponse $errorResponse
+     * @param ErrorContext $errorContext
      *
      * @return string
      */
-    private static function handleErrorTemplate(ErrorResponse $errorResponse)
+    private static function handleErrorTemplate(ErrorContext $errorContext)
     {
         // set http status
-        http_response_code($errorResponse->getHttpCode());
+        http_response_code($errorContext->getHttpCode());
 
-        return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorResponse' => $errorResponse]);
+        return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorContext]);
     }
 }

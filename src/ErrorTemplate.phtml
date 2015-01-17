@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Simplon\Error\ErrorResponse $errorResponse
+ * @var \Simplon\Error\ErrorContext $errorContext
  */
 ?>
 <!DOCTYPE html>
@@ -74,13 +74,13 @@
     <div id="content">
         <div style="text-align: center">
             <h1>
-                <span><?php echo $errorResponse->getHttpCode() ?></span>&nbsp;<?php echo $errorResponse->getMessage() ?>
+                <span><?php echo $errorContext->getHttpCode() ?></span>&nbsp;<?php echo $errorContext->getMessage() ?>
             </h1>
 
             <div id="date">Date/Time: <?php echo (new DateTime())->format('c') ?></div>
         </div>
 
-        <?php foreach ($errorResponse->getData() as $k => $v): ?>
+        <?php foreach ($errorContext->getData() as $k => $v): ?>
             <?php if (is_array($v)): ?>
                 <?php foreach ($v as $sk => $sv): ?>
                     <div>
