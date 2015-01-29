@@ -233,6 +233,7 @@ class Frontend
         // handle json response
         if ($response instanceof JsonResponse)
         {
+            header('Content-type: application/json');
             $response = json_encode($response->getData());
         }
 
@@ -414,6 +415,7 @@ class Frontend
         switch ($errorResponse->getResponseType())
         {
             case ErrorResponse::RESPONSE_TYPE_JSON:
+                header('Content-type: application/json');
                 return self::handleErrorJsonResponse($errorResponse);
 
             default:
