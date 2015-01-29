@@ -3,15 +3,17 @@
 namespace Simplon\Frontend;
 
 use Simplon\Error\ErrorHandler;
-use Simplon\Error\ErrorContext;
 use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheFormRenderer;
 use Simplon\Form\Renderer\PhtmlFormRenderer;
+use Simplon\Frontend\Responses\ErrorResponse;
+use Simplon\Frontend\Responses\JsonResponse;
 use Simplon\Frontend\Responses\RedirectResponse;
 use Simplon\Helper\Config;
 use Simplon\Helper\HelperException;
 use Simplon\Locale\Locale;
 use Simplon\Phtml\Phtml;
+use Simplon\Phtml\PhtmlException;
 use Simplon\Request\Request;
 use Simplon\Router\Router;
 use Simplon\Router\RouterException;
@@ -57,22 +59,8 @@ class Frontend
         // setup template
         self::$template = new Template();
 
-        // observe routes
-        $response = Router::observe($routes, null, $routingDispatcher);
-
-        // render error page
-        if ($response instanceof ErrorContext)
-        {
-            return self::handleErrorTemplate($response);
-        }
-
-        // handle redirects
-        if ($response instanceof RedirectResponse)
-        {
-            Request::redirect($response->getUrl());
-        }
-
-        return (string)$response;
+        // handle routing and its response
+        return self::handleRoutingAndResponse($routes, $routingDispatcher);
     }
 
     /**
@@ -215,6 +203,43 @@ class Frontend
     }
 
     /**
+     * @param array $routes
+     * @param null|\Closure $routingDispatcher
+     *
+     * @return string
+     * @throws RouterException
+     */
+    private static function handleRoutingAndResponse(array $routes, $routingDispatcher = null)
+    {
+        // observe routes
+        $response = Router::observe($routes, null, $routingDispatcher);
+
+        // render error page
+        if ($response instanceof ErrorResponse)
+        {
+            return self::handleErrorResponse($response);
+        }
+
+        // --------------------------------------
+
+        // handle redirects
+        if ($response instanceof RedirectResponse)
+        {
+            Request::redirect($response->getUrl());
+        }
+
+        // --------------------------------------
+
+        // handle json response
+        if ($response instanceof JsonResponse)
+        {
+            $response = json_encode($response->getData());
+        }
+
+        return (string)$response;
+    }
+
+    /**
      * @param array $configCommon
      * @param array $configEnv
      *
@@ -350,7 +375,7 @@ class Frontend
     private static function handleScriptErrors()
     {
         ErrorHandler::handleScriptErrors(
-            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
         );
     }
 
@@ -360,7 +385,7 @@ class Frontend
     private static function handleFatalErrors()
     {
         ErrorHandler::handleFatalErrors(
-            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
         );
     }
 
@@ -370,20 +395,57 @@ class Frontend
     private static function handleExceptions()
     {
         ErrorHandler::handleExceptions(
-            function (ErrorContext $errorContext) { return self::handleErrorTemplate($errorContext); }
+            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
         );
     }
 
     /**
-     * @param ErrorContext $errorContext
+     * @param ErrorResponse $errorResponse
+     *
+     * @return string
+     * @throws PhtmlException
+     */
+    private static function handleErrorResponse(ErrorResponse $errorResponse)
+    {
+        // set http status
+        http_response_code($errorResponse->getHttpCode());
+
+        // handle context response
+        switch ($errorResponse->getResponseType())
+        {
+            case ErrorResponse::RESPONSE_TYPE_JSON:
+                return self::handleErrorJsonResponse($errorResponse);
+
+            default:
+                return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorResponse]);
+        }
+    }
+
+    /**
+     * @param ErrorResponse $errorResponse
      *
      * @return string
      */
-    private static function handleErrorTemplate(ErrorContext $errorContext)
+    private static function handleErrorJsonResponse(ErrorResponse $errorResponse)
     {
-        // set http status
-        http_response_code($errorContext->getHttpCode());
+        $data = [
+            'error' => [
+                'message' => $errorResponse->getMessage(),
+            ]
+        ];
 
-        return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorContext]);
+        // set code
+        if ($errorResponse->getCode() !== null)
+        {
+            $data['error']['code'] = $errorResponse->getCode();
+        }
+
+        // set data
+        if ($errorResponse->hasData() === true)
+        {
+            $data['error']['data'] = $errorResponse->getData();
+        }
+
+        return json_encode($data);
     }
 }
