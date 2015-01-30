@@ -2,6 +2,7 @@
 
 namespace Simplon\Frontend;
 
+use Simplon\Error\ErrorContext;
 use Simplon\Error\ErrorHandler;
 use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheFormRenderer;
@@ -376,7 +377,7 @@ class Frontend
     private static function handleScriptErrors()
     {
         ErrorHandler::handleScriptErrors(
-            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
         );
     }
 
@@ -386,7 +387,7 @@ class Frontend
     private static function handleFatalErrors()
     {
         ErrorHandler::handleFatalErrors(
-            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
         );
     }
 
@@ -396,56 +397,56 @@ class Frontend
     private static function handleExceptions()
     {
         ErrorHandler::handleExceptions(
-            function (ErrorResponse $errorResponse) { return self::handleErrorResponse($errorResponse); }
+            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
         );
     }
 
     /**
-     * @param ErrorResponse $errorResponse
+     * @param ErrorContext $errorContext
      *
      * @return string
      * @throws PhtmlException
      */
-    private static function handleErrorResponse(ErrorResponse $errorResponse)
+    private static function handleErrorResponse(ErrorContext $errorContext)
     {
         // set http status
-        http_response_code($errorResponse->getHttpCode());
+        http_response_code($errorContext->getHttpCode());
 
         // handle context response
-        switch ($errorResponse->getResponseType())
+        switch ($errorContext->getResponseType())
         {
             case ErrorResponse::RESPONSE_TYPE_JSON:
                 header('Content-type: application/json');
-                return self::handleErrorJsonResponse($errorResponse);
+                return self::handleErrorJsonResponse($errorContext);
 
             default:
-                return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorResponse]);
+                return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorContext]);
         }
     }
 
     /**
-     * @param ErrorResponse $errorResponse
+     * @param ErrorContext $errorContext
      *
      * @return string
      */
-    private static function handleErrorJsonResponse(ErrorResponse $errorResponse)
+    private static function handleErrorJsonResponse(ErrorContext $errorContext)
     {
         $data = [
             'error' => [
-                'message' => $errorResponse->getMessage(),
+                'message' => $errorContext->getMessage(),
             ]
         ];
 
         // set code
-        if ($errorResponse->getCode() !== null)
+        if ($errorContext->getCode() !== null)
         {
-            $data['error']['code'] = $errorResponse->getCode();
+            $data['error']['code'] = $errorContext->getCode();
         }
 
         // set data
-        if ($errorResponse->hasData() === true)
+        if ($errorContext->hasData() === true)
         {
-            $data['error']['data'] = $errorResponse->getData();
+            $data['error']['data'] = $errorContext->getData();
         }
 
         return json_encode($data);
