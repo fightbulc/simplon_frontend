@@ -36,15 +36,19 @@ class Frontend
     private static $template;
 
     /**
+     * @var string
+     */
+    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
+
+    /**
+     * @param Router $router
      * @param array $configCommon
      * @param array $configEnv
-     * @param array $routes
-     * @param null|\Closure $routingDispatcher
      *
      * @return string
      * @throws RouterException
      */
-    public static function start(array $configCommon, array $configEnv, array $routes, $routingDispatcher = null)
+    public static function dispatch(Router $router, array $configCommon, array $configEnv = [])
     {
         // handle errors
         self::handleScriptErrors();
@@ -61,7 +65,7 @@ class Frontend
         self::$template = new Template();
 
         // handle routing and its response
-        return self::handleRoutingAndResponse($routes, $routingDispatcher);
+        return self::handleRoutingAndResponse($router);
     }
 
     /**
@@ -204,21 +208,30 @@ class Frontend
     }
 
     /**
-     * @param array $routes
-     * @param null|\Closure $routingDispatcher
+     * @param $responseType
+     */
+    public function setErrorResponseType($responseType)
+    {
+        self::$errorResponseType = $responseType;
+    }
+
+    /**
+     * @param Router $router
      *
      * @return string
      * @throws RouterException
      */
-    private static function handleRoutingAndResponse(array $routes, $routingDispatcher = null)
+    private static function handleRoutingAndResponse(Router $router)
     {
         // observe routes
-        $response = Router::observe($routes, null, $routingDispatcher);
+        $response = $router->observe();
 
         // render error page
         if ($response instanceof ErrorResponse)
         {
-            return self::handleErrorResponse($response);
+            return self::handleErrorResponse(
+                $response->setResponseType(self::$errorResponseType) // enable dynamic response type setting
+            );
         }
 
         // --------------------------------------
@@ -417,6 +430,7 @@ class Frontend
         {
             case ErrorResponse::RESPONSE_TYPE_JSON:
                 header('Content-type: application/json');
+
                 return self::handleErrorJsonResponse($errorContext);
 
             default:

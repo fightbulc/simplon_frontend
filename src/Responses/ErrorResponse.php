@@ -21,6 +21,16 @@ class ErrorResponse extends ErrorContext implements ResponseInterface
     }
 
     /**
+     * @param string $responseType
+     *
+     * @return ErrorResponse
+     */
+    public function setResponseType($responseType)
+    {
+        return parent::setResponseType($responseType);
+    }
+
+    /**
      * @return int
      */
     public function getHttpCode()
