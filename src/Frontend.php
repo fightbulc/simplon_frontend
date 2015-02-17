@@ -20,6 +20,11 @@ use Simplon\Router\Router;
 use Simplon\Router\RouterException;
 use Simplon\Template\Template;
 
+/**
+ * Frontend
+ * @package Simplon\Frontend
+ * @author Tino Ehrich (tino@bigpun.me)
+ */
 class Frontend
 {
     const TEMPLATE_MUSTACHE = 'mustache';
@@ -152,6 +157,21 @@ class Frontend
         foreach ($pathAssets as $pathAsset)
         {
             self::$template->addAssetBody($pathAsset);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $codeLines
+     *
+     * @return bool
+     */
+    public static function addAssetsInline(array $codeLines)
+    {
+        foreach ($codeLines as $line)
+        {
+            self::$template->addAssetInline($line);
         }
 
         return true;
