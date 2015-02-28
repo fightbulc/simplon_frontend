@@ -23,7 +23,7 @@ use Simplon\Template\Template;
 /**
  * Frontend
  * @package Simplon\Frontend
- * @author Tino Ehrich (tino@bigpun.me)
+ * @author  Tino Ehrich (tino@bigpun.me)
  */
 class Frontend
 {
@@ -47,8 +47,8 @@ class Frontend
 
     /**
      * @param Router $router
-     * @param array $configCommon
-     * @param array $configEnv
+     * @param array  $configCommon
+     * @param array  $configEnv
      *
      * @return string
      * @throws RouterException
@@ -121,13 +121,13 @@ class Frontend
     }
 
     /**
-     * @param $group
-     * @param $key
+     * @param       $group
+     * @param       $key
      * @param array $params
      *
      * @return string
      */
-    public static function getTranslation($group, $key, array $params = [])
+    public static function translate($group, $key, array $params = [])
     {
         return self::$locale->get($group, $key, $params);
     }
@@ -179,7 +179,7 @@ class Frontend
 
     /**
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
@@ -191,20 +191,23 @@ class Frontend
 
     /**
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
      */
     public static function renderPhtmlTemplate($pathTemplate, $params = [])
     {
+        // add short syntax for translation
+        $params['t'] = self::$locale;
+
         return self::renderTemplate(self::TEMPLATE_PHTML, $pathTemplate, $params);
     }
 
     /**
-     * @param Form $form
+     * @param Form   $form
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
@@ -215,9 +218,9 @@ class Frontend
     }
 
     /**
-     * @param Form $form
+     * @param Form   $form
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
@@ -311,7 +314,7 @@ class Frontend
     /**
      * @param string $type
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
@@ -341,9 +344,9 @@ class Frontend
 
     /**
      * @param string $type
-     * @param Form $form
+     * @param Form   $form
      * @param string $pathTemplate
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      * @throws FrontendException
