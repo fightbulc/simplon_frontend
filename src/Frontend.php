@@ -227,6 +227,9 @@ class Frontend
      */
     public static function renderPhtmlFormTemplate(Form $form, $pathTemplate, array $params = [])
     {
+        // add short syntax for translation
+        $params['t'] = self::$locale;
+
         return self::renderFormTemplate(self::TEMPLATE_PHTML, $form, $pathTemplate, $params);
     }
 
