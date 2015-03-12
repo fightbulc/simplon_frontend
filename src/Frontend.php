@@ -250,7 +250,14 @@ class Frontend
     private static function handleRoutingAndResponse(Router $router)
     {
         // observe routes
-        $response = $router->observe();
+        try
+        {
+            $response = $router->observe();
+        }
+        catch (RouterException $e)
+        {
+            $response = (new ErrorResponse())->requestNotFound();
+        }
 
         // render error page
         if ($response instanceof ErrorResponse)
