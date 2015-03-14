@@ -28,8 +28,13 @@ class ErrorObserver
     /**
      * @param string $pathErrorTemplate
      */
-    public function __construct($pathErrorTemplate = __DIR__ . '/Errors/ErrorTemplate')
+    public function __construct($pathErrorTemplate = null)
     {
+        if ($pathErrorTemplate === null)
+        {
+            $pathErrorTemplate = __DIR__ . '/Errors/ErrorTemplate';
+        }
+
         $this->pathErrorTemplate = $pathErrorTemplate;
     }
 
@@ -79,6 +84,35 @@ class ErrorObserver
             default:
                 return Phtml::render($this->pathErrorTemplate, ['errorContext' => $errorContext]);
         }
+    }
+
+    /**
+     * @param ErrorContext $errorContext
+     *
+     * @return string
+     */
+    private function handleErrorJsonResponse(ErrorContext $errorContext)
+    {
+        $data = [
+            'error' => [
+                'code'    => $errorContext->getHttpCode(),
+                'message' => $errorContext->getMessage(),
+            ]
+        ];
+
+        // set code
+        if ($errorContext->getCode() !== null)
+        {
+            $data['error']['code'] = $errorContext->getCode();
+        }
+
+        // set data
+        if ($errorContext->hasData() === true)
+        {
+            $data['error']['data'] = $errorContext->getData();
+        }
+
+        return json_encode($data);
     }
 
     /**
@@ -145,33 +179,5 @@ class ErrorObserver
         );
 
         return $this;
-    }
-
-    /**
-     * @param ErrorContext $errorContext
-     *
-     * @return string
-     */
-    private function handleErrorJsonResponse(ErrorContext $errorContext)
-    {
-        $data = [
-            'error' => [
-                'message' => $errorContext->getMessage(),
-            ]
-        ];
-
-        // set code
-        if ($errorContext->getCode() !== null)
-        {
-            $data['error']['code'] = $errorContext->getCode();
-        }
-
-        // set data
-        if ($errorContext->hasData() === true)
-        {
-            $data['error']['data'] = $errorContext->getData();
-        }
-
-        return json_encode($data);
     }
 }

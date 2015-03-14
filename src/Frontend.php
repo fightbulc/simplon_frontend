@@ -44,7 +44,7 @@ class Frontend
     /**
      * @var string
      */
-    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_JSON;
+    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
 
     /**
      * @param Router        $router
@@ -256,15 +256,13 @@ class Frontend
         }
         catch (RouterException $e)
         {
-            $response = (new ErrorResponse())->requestNotFound();
+            $response = (new ErrorResponse(self::$errorResponseType))->requestNotFound();
         }
 
         // render error page
         if ($response instanceof ErrorResponse)
         {
-            return self::$errorObserver->handleErrorResponse(
-                $response->setResponseType(self::$errorResponseType) // enable dynamic response type setting
-            );
+            return self::$errorObserver->handleErrorResponse($response);
         }
 
         // --------------------------------------
