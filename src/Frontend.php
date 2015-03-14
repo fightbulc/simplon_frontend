@@ -2,8 +2,6 @@
 
 namespace Simplon\Frontend;
 
-use Simplon\Error\ErrorContext;
-use Simplon\Error\ErrorHandler;
 use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheFormRenderer;
 use Simplon\Form\Renderer\PhtmlFormRenderer;
@@ -13,8 +11,6 @@ use Simplon\Frontend\Responses\RedirectResponse;
 use Simplon\Helper\Config;
 use Simplon\Helper\HelperException;
 use Simplon\Locale\Locale;
-use Simplon\Phtml\Phtml;
-use Simplon\Phtml\PhtmlException;
 use Simplon\Request\Request;
 use Simplon\Router\Router;
 use Simplon\Router\RouterException;
@@ -41,24 +37,28 @@ class Frontend
     private static $template;
 
     /**
-     * @var string
+     * @var ErrorObserver
      */
-    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
+    private static $errorObserver;
 
     /**
-     * @param Router $router
-     * @param array  $configCommon
-     * @param array  $configEnv
+     * @var string
+     */
+    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_JSON;
+
+    /**
+     * @param Router        $router
+     * @param ErrorObserver $errorObserver
+     * @param array         $configCommon
+     * @param array         $configEnv
      *
      * @return string
      * @throws RouterException
      */
-    public static function dispatch(Router $router, array $configCommon, array $configEnv = [])
+    public static function dispatch(Router $router, ErrorObserver $errorObserver, array $configCommon, array $configEnv = [])
     {
         // handle errors
-        self::handleScriptErrors();
-        self::handleFatalErrors();
-        self::handleExceptions();
+        self::$errorObserver = $errorObserver->observe();
 
         // setup config
         self::setConfig($configCommon, $configEnv);
@@ -262,7 +262,7 @@ class Frontend
         // render error page
         if ($response instanceof ErrorResponse)
         {
-            return self::handleErrorResponse(
+            return self::$errorObserver->handleErrorResponse(
                 $response->setResponseType(self::$errorResponseType) // enable dynamic response type setting
             );
         }
@@ -415,87 +415,5 @@ class Frontend
         }
 
         return true;
-    }
-
-    /**
-     * @return void
-     */
-    private static function handleScriptErrors()
-    {
-        ErrorHandler::handleScriptErrors(
-            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function handleFatalErrors()
-    {
-        ErrorHandler::handleFatalErrors(
-            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function handleExceptions()
-    {
-        ErrorHandler::handleExceptions(
-            function (ErrorContext $errorContext) { return self::handleErrorResponse($errorContext); }
-        );
-    }
-
-    /**
-     * @param ErrorContext $errorContext
-     *
-     * @return string
-     * @throws PhtmlException
-     */
-    private static function handleErrorResponse(ErrorContext $errorContext)
-    {
-        // set http status
-        http_response_code($errorContext->getHttpCode());
-
-        // handle context response
-        switch ($errorContext->getResponseType())
-        {
-            case ErrorResponse::RESPONSE_TYPE_JSON:
-                header('Content-type: application/json');
-
-                return self::handleErrorJsonResponse($errorContext);
-
-            default:
-                return Phtml::render(__DIR__ . '/ErrorTemplate', ['errorContext' => $errorContext]);
-        }
-    }
-
-    /**
-     * @param ErrorContext $errorContext
-     *
-     * @return string
-     */
-    private static function handleErrorJsonResponse(ErrorContext $errorContext)
-    {
-        $data = [
-            'error' => [
-                'message' => $errorContext->getMessage(),
-            ]
-        ];
-
-        // set code
-        if ($errorContext->getCode() !== null)
-        {
-            $data['error']['code'] = $errorContext->getCode();
-        }
-
-        // set data
-        if ($errorContext->hasData() === true)
-        {
-            $data['error']['data'] = $errorContext->getData();
-        }
-
-        return json_encode($data);
     }
 }

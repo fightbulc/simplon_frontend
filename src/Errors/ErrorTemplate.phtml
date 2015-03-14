@@ -1,7 +1,9 @@
 <?php
 /**
- * @var \Simplon\Error\ErrorContext $errorContext
+ * @var ErrorContext $errorContext
  */
+use Simplon\Error\ErrorContext;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,15 +15,15 @@
     <style type="text/css">
         body
         {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Courier', sans-serif;
             background: #F77;
             margin: 20px;
-            font-size: 13px;
+            font-size: 16px;
         }
 
         #content
         {
-            width: 800px;
+            width: 90%;
             margin: auto;
             background: #fff;
             padding: 10px 30px;
@@ -56,7 +58,7 @@
 
         pre
         {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Courier', sans-serif;
         }
 
         p,
@@ -82,23 +84,31 @@
 
         <?php foreach ($errorContext->getData() as $k => $v): ?>
             <?php if (is_array($v)): ?>
+
                 <?php foreach ($v as $sk => $sv): ?>
                     <div>
                         <strong><?php echo $sk ?></strong>
 
                         <?php if (is_array($sv)): ?>
+
                             <pre><?php echo json_encode($sv, JSON_PRETTY_PRINT) ?></pre>
+
                         <?php else: ?>
+
                             <p><?php echo $sv ?></p>
+
                         <?php endif ?>
                     </div>
                 <?php endforeach ?>
+
             <?php else: ?>
+
                 <div>
                     <strong><?php echo $k ?></strong>
 
                     <p><?php echo $v ?></p>
                 </div>
+
             <?php endif ?>
         <?php endforeach ?>
     </div>
