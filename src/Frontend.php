@@ -137,11 +137,11 @@ class Frontend
      *
      * @return bool
      */
-    public static function addAssetsHeader(array $pathAssets)
+    public static function addAssetsCss(array $pathAssets)
     {
         foreach ($pathAssets as $pathAsset)
         {
-            self::$template->addAssetHeader($pathAsset);
+            self::$template->addAssetCss($pathAsset);
         }
 
         return true;
@@ -152,11 +152,11 @@ class Frontend
      *
      * @return bool
      */
-    public static function addAssetsBody(array $pathAssets)
+    public static function addAssetsJs(array $pathAssets)
     {
         foreach ($pathAssets as $pathAsset)
         {
-            self::$template->addAssetBody($pathAsset);
+            self::$template->addAssetJs($pathAsset);
         }
 
         return true;
@@ -167,11 +167,11 @@ class Frontend
      *
      * @return bool
      */
-    public static function addAssetsInline(array $codeLines)
+    public static function addAssetsCode(array $codeLines)
     {
         foreach ($codeLines as $line)
         {
-            self::$template->addAssetInline($line);
+            self::$template->addAssetCode($line);
         }
 
         return true;
