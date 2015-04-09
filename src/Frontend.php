@@ -42,11 +42,6 @@ class Frontend
     private static $errorObserver;
 
     /**
-     * @var string
-     */
-    private static $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
-
-    /**
      * @param Router        $router
      * @param ErrorObserver $errorObserver
      * @param array         $configCommon
@@ -234,14 +229,6 @@ class Frontend
     }
 
     /**
-     * @param $responseType
-     */
-    public function setErrorResponseType($responseType)
-    {
-        self::$errorResponseType = $responseType;
-    }
-
-    /**
      * @param Router $router
      *
      * @return string
@@ -256,7 +243,7 @@ class Frontend
         }
         catch (RouterException $e)
         {
-            $response = (new ErrorResponse(self::$errorResponseType))->requestNotFound();
+            $response = (new ErrorResponse())->requestNotFound();
         }
 
         // render error page

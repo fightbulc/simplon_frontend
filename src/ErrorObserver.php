@@ -18,6 +18,11 @@ class ErrorObserver
     /**
      * @var string
      */
+    private $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
+
+    /**
+     * @var string
+     */
     private $pathErrorTemplate;
 
     /**
@@ -39,6 +44,28 @@ class ErrorObserver
     }
 
     /**
+     * @param string $errorResponseType
+     *
+     * @return ErrorObserver
+     */
+    public function setErrorResponseType($errorResponseType)
+    {
+        $allowedTypes = [
+            ErrorResponse::RESPONSE_TYPE_HTML,
+            ErrorResponse::RESPONSE_TYPE_JSON,
+        ];
+
+        if (in_array($errorResponseType, $allowedTypes) === false)
+        {
+            $errorResponseType = ErrorResponse::RESPONSE_TYPE_HTML;
+        }
+
+        $this->errorResponseType = $errorResponseType;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function observe()
@@ -51,9 +78,9 @@ class ErrorObserver
     }
 
     /**
-     * @param callable $callback
+     * @param \Closure $callback
      *
-     * @return $this
+     * @return ErrorObserver
      */
     public function addCallback(\Closure $callback)
     {
@@ -74,7 +101,7 @@ class ErrorObserver
         http_response_code($errorContext->getHttpCode());
 
         // handle context response
-        switch ($errorContext->getResponseType())
+        switch ($this->errorResponseType)
         {
             case ErrorResponse::RESPONSE_TYPE_JSON:
                 header('Content-type: application/json');
