@@ -1,0 +1,532 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "4f7e9365c6ba73469399fd6e5eda3c70",
+    "packages": [
+        {
+            "name": "danielstjules/stringy",
+            "version": "1.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielstjules/Stringy.git",
+                "reference": "3cf18e9e424a6dedc38b7eb7ef580edb0929461b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/3cf18e9e424a6dedc38b7eb7ef580edb0929461b",
+                "reference": "3cf18e9e424a6dedc38b7eb7ef580edb0929461b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stringy\\": "src/"
+                },
+                "files": [
+                    "src/Create.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel St. Jules",
+                    "email": "danielst.jules@gmail.com",
+                    "homepage": "http://www.danielstjules.com"
+                }
+            ],
+            "description": "A string manipulation library with multibyte support",
+            "homepage": "https://github.com/danielstjules/Stringy",
+            "keywords": [
+                "UTF",
+                "helpers",
+                "manipulation",
+                "methods",
+                "multibyte",
+                "string",
+                "utf-8",
+                "utility",
+                "utils"
+            ],
+            "time": "2015-02-10 06:19:18"
+        },
+        {
+            "name": "respect/validation",
+            "version": "0.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Respect/Validation.git",
+                "reference": "4b9856c11f893954b7c822cbb5dfb75c468e7827"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Respect/Validation/zipball/4b9856c11f893954b7c822cbb5dfb75c468e7827",
+                "reference": "4b9856c11f893954b7c822cbb5dfb75c468e7827",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "symfony/validator": "~2.1",
+                "zendframework/zend-validator": "~2.0"
+            },
+            "suggest": {
+                "ext-bcmath": "Arbitrary Precision Mathematics",
+                "ext-mbstring": "Multibyte String Functions"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Respect\\Validation": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD Style"
+            ],
+            "authors": [
+                {
+                    "name": "Respect/Validation Contributors",
+                    "homepage": "https://github.com/Respect/Validation/graphs/contributors"
+                }
+            ],
+            "description": "The most awesome validation engine ever created for PHP",
+            "homepage": "http://respect.li",
+            "keywords": [
+                "respect",
+                "validation",
+                "validator"
+            ],
+            "time": "2014-07-11 06:35:17"
+        },
+        {
+            "name": "simplon/error",
+            "version": "0.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_error.git",
+                "reference": "99eb2945f32e90637ee2d503221cc5494e4d9f00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_error/zipball/99eb2945f32e90637ee2d503221cc5494e4d9f00",
+                "reference": "99eb2945f32e90637ee2d503221cc5494e4d9f00",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Error\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Graceful error handling",
+            "homepage": "https://github.com/fightbulc/simplon_error",
+            "keywords": [
+                "error",
+                "graceful",
+                "handling",
+                "response"
+            ],
+            "time": "2015-03-14 19:12:16"
+        },
+        {
+            "name": "simplon/form",
+            "version": "0.5.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_form.git",
+                "reference": "20aeff8b9d8acb577e348d18252312feafe72542"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_form/zipball/20aeff8b9d8acb577e348d18252312feafe72542",
+                "reference": "20aeff8b9d8acb577e348d18252312feafe72542",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "respect/validation": "0.6.*",
+                "simplon/mustache": "0.1.*",
+                "simplon/phtml": "0.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Form\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Easy form building, validation and follow-up callbacks",
+            "homepage": "https://github.com/fightbulc/simplon_form",
+            "keywords": [
+                "callbacks",
+                "fields",
+                "flexibility",
+                "form",
+                "mustache",
+                "phtml",
+                "validation"
+            ],
+            "time": "2015-03-18 16:25:42"
+        },
+        {
+            "name": "simplon/helper",
+            "version": "0.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_helper.git",
+                "reference": "6997fba50deb0999f2167a8b8fec0a9eff973a99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_helper/zipball/6997fba50deb0999f2167a8b8fec0a9eff973a99",
+                "reference": "6997fba50deb0999f2167a8b8fec0a9eff973a99",
+                "shasum": ""
+            },
+            "require": {
+                "danielstjules/stringy": "1.9.*",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Helper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Helpers for recurring requirements.",
+            "homepage": "https://github.com/fightbulc/simplon_helper",
+            "keywords": [
+                "helper",
+                "strings",
+                "value objects"
+            ],
+            "time": "2015-04-16 05:30:46"
+        },
+        {
+            "name": "simplon/locale",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_locale.git",
+                "reference": "a86f10907d1027a56791ac0d3dd1f2b956aedf80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_locale/zipball/a86f10907d1027a56791ac0d3dd1f2b956aedf80",
+                "reference": "a86f10907d1027a56791ac0d3dd1f2b956aedf80",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Locale\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Simple, straight forward locale reader",
+            "homepage": "https://github.com/fightbulc/simplon_locale",
+            "keywords": [
+                "i18n",
+                "locales",
+                "reader"
+            ],
+            "time": "2014-11-12 22:49:30"
+        },
+        {
+            "name": "simplon/mustache",
+            "version": "0.1.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_mustache.git",
+                "reference": "00d95584b4bf8e64e1c3974966dbd13cabc7fe2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_mustache/zipball/00d95584b4bf8e64e1c3974966dbd13cabc7fe2c",
+                "reference": "00d95584b4bf8e64e1c3974966dbd13cabc7fe2c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Mustache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Lightweight & fast implementation of Mustache - Logic-less templates.",
+            "homepage": "https://github.com/fightbulc/simplon_mustache",
+            "keywords": [
+                "fast",
+                "leightweight",
+                "less",
+                "logic",
+                "logic-less",
+                "mustache",
+                "template"
+            ],
+            "time": "2015-02-07 21:44:54"
+        },
+        {
+            "name": "simplon/phtml",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_phtml.git",
+                "reference": "acf6fd9c5b70df26bb1659770ca13a6084c1ad2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_phtml/zipball/acf6fd9c5b70df26bb1659770ca13a6084c1ad2a",
+                "reference": "acf6fd9c5b70df26bb1659770ca13a6084c1ad2a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Phtml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Simple, straight forward implementation of php templates.",
+            "homepage": "https://github.com/fightbulc/simplon_phtml",
+            "keywords": [
+                "php",
+                "phtml",
+                "template"
+            ],
+            "time": "2014-11-15 12:29:39"
+        },
+        {
+            "name": "simplon/request",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_request.git",
+                "reference": "736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_request/zipball/736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3",
+                "reference": "736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Request\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Simple, straight forward request helper",
+            "homepage": "https://github.com/fightbulc/simplon_request",
+            "keywords": [
+                "auth",
+                "curl",
+                "get",
+                "jsonrpc",
+                "post",
+                "request"
+            ],
+            "time": "2015-04-16 05:35:41"
+        },
+        {
+            "name": "simplon/router",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_router.git",
+                "reference": "8800e030c4eb5280c9599155867fe48a5b9cb7d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_router/zipball/8800e030c4eb5280c9599155867fe48a5b9cb7d4",
+                "reference": "8800e030c4eb5280c9599155867fe48a5b9cb7d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Router\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Simple routing",
+            "homepage": "https://github.com/fightbulc/simplon_router",
+            "keywords": [
+                "callbacks",
+                "request",
+                "respond",
+                "routing"
+            ],
+            "time": "2015-03-12 09:56:34"
+        },
+        {
+            "name": "simplon/template",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/simplon_template.git",
+                "reference": "cd30d4569e324dd29b6b6790ee781e49edd21ff1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/simplon_template/zipball/cd30d4569e324dd29b6b6790ee781e49edd21ff1",
+                "reference": "cd30d4569e324dd29b6b6790ee781e49edd21ff1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "simplon/mustache": "0.1.*",
+                "simplon/phtml": "0.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Simplon\\Template\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
+                }
+            ],
+            "description": "Simple templating solution w/ assets handling (mustache, phtml, assets)",
+            "homepage": "https://github.com/fightbulc/simplon_template",
+            "keywords": [
+                "fast",
+                "lightweight",
+                "mustache",
+                "phtml",
+                "templates"
+            ],
+            "time": "2015-03-17 19:15:23"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4"
+    },
+    "platform-dev": []
+}
