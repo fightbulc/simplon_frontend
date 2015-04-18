@@ -210,12 +210,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_helper.git",
-                "reference": "23fb09a1ac554392231194fbbc67b84263300daa"
+                "reference": "f2997490447148fe5f97938084fcc993bc3bf175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_helper/zipball/23fb09a1ac554392231194fbbc67b84263300daa",
-                "reference": "23fb09a1ac554392231194fbbc67b84263300daa",
+                "url": "https://api.github.com/repos/fightbulc/simplon_helper/zipball/f2997490447148fe5f97938084fcc993bc3bf175",
+                "reference": "f2997490447148fe5f97938084fcc993bc3bf175",
                 "shasum": ""
             },
             "require": {
@@ -246,7 +246,7 @@
                 "strings",
                 "value objects"
             ],
-            "time": "2015-04-16 06:53:29"
+            "time": "2015-04-18 13:03:36"
         },
         {
             "name": "simplon/locale",

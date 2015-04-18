@@ -9,7 +9,7 @@ use Simplon\Frontend\Responses\ErrorResponse;
 use Simplon\Frontend\Responses\JsonResponse;
 use Simplon\Frontend\Responses\RedirectResponse;
 use Simplon\Helper\Config;
-use Simplon\Helper\HelperException;
+use Simplon\Helper\ConfigException;
 use Simplon\Locale\Locale;
 use Simplon\Request\Request;
 use Simplon\Router\Router;
@@ -89,8 +89,8 @@ class Frontend
     /**
      * @param array $keys
      *
-     * @return array|null
-     * @throws HelperException
+     * @return mixed|null
+     * @throws ConfigException
      */
     public static function getConfigByKeys(array $keys)
     {
@@ -313,7 +313,6 @@ class Frontend
      *
      * @return string
      * @throws FrontendException
-     * @throws HelperException
      */
     private static function renderTemplate($type, $pathTemplate, array $params = [])
     {
