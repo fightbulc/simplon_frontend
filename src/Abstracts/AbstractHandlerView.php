@@ -15,7 +15,7 @@ use Simplon\Frontend\Responses\RedirectResponse;
 abstract class AbstractHandlerView
 {
     /**
-     * @param callable $callback
+     * @param \Closure $callback
      * @param ResponseInterface $response
      * @param array $opt
      *
