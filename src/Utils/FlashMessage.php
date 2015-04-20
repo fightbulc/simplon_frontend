@@ -56,7 +56,7 @@ class FlashMessage
             return null;
         }
 
-        return '<div class="' . $flash['type'] . '">' . $flash['message'] . '</div>';
+        return '<div class="flash-message ' . $flash['type'] . '">' . $flash['message'] . '</div>';
     }
 
     /**

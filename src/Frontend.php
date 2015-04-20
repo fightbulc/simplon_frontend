@@ -117,6 +117,14 @@ class Frontend
     }
 
     /**
+     * @return SessionStorageInterface
+     */
+    public static function getSessionStorage()
+    {
+        return self::$sessionStorage;
+    }
+
+    /**
      * @return bool
      */
     public static function hasFlash()
@@ -272,8 +280,7 @@ class Frontend
         $params['t'] = self::$locale;
 
         // add short syntax for flash message
-        $params['hasFlash'] = self::$flashMessage->hasFlash();
-        $params['flashMessage'] = self::$flashMessage->getFlash();
+        $params['f'] = self::$flashMessage;
 
         return self::renderTemplate(self::TEMPLATE_PHTML, $pathTemplate, $params);
     }
@@ -305,8 +312,7 @@ class Frontend
         $params['t'] = self::$locale;
 
         // add short syntax for flash message
-        $params['hasFlash'] = self::$flashMessage->hasFlash();
-        $params['flashMessage'] = self::$flashMessage->getFlash();
+        $params['f'] = self::$flashMessage;
 
         return self::renderFormTemplate(self::TEMPLATE_PHTML, $form, $pathTemplate, $params);
     }
