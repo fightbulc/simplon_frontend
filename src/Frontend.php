@@ -5,9 +5,11 @@ namespace Simplon\Frontend;
 use Simplon\Form\Form;
 use Simplon\Form\Renderer\MustacheFormRenderer;
 use Simplon\Form\Renderer\PhtmlFormRenderer;
+use Simplon\Frontend\Interfaces\SessionStorageInterface;
 use Simplon\Frontend\Responses\ErrorResponse;
 use Simplon\Frontend\Responses\JsonResponse;
 use Simplon\Frontend\Responses\RedirectResponse;
+use Simplon\Frontend\Utils\FlashMessage;
 use Simplon\Helper\Config;
 use Simplon\Helper\ConfigException;
 use Simplon\Locale\Locale;
@@ -37,26 +39,43 @@ class Frontend
     private static $template;
 
     /**
+     * @var SessionStorageInterface
+     */
+    private static $sessionStorage;
+
+    /**
+     * @var FlashMessage
+     */
+    private static $flashMessage;
+
+    /**
      * @var ErrorObserver
      */
     private static $errorObserver;
 
     /**
-     * @param Router        $router
-     * @param ErrorObserver $errorObserver
-     * @param array         $configCommon
-     * @param array         $configEnv
+     * @param Router                  $router
+     * @param ErrorObserver           $errorObserver
+     * @param SessionStorageInterface $sessionStorage
+     * @param array                   $configCommon
+     * @param array                   $configEnv
      *
      * @return string
      * @throws RouterException
      */
-    public static function dispatch(Router $router, ErrorObserver $errorObserver, array $configCommon, array $configEnv = [])
+    public static function dispatch(Router $router, ErrorObserver $errorObserver, SessionStorageInterface $sessionStorage, array $configCommon, array $configEnv = [])
     {
         // handle errors
         self::$errorObserver = $errorObserver->observe();
 
         // setup config
         self::setConfig($configCommon, $configEnv);
+
+        // set session storage
+        self::$sessionStorage = $sessionStorage;
+
+        // set flash message
+        self::$flashMessage = new FlashMessage(self::$sessionStorage);
 
         // setup locale
         self::setupLocale();
@@ -95,6 +114,62 @@ class Frontend
     public static function getConfigByKeys(array $keys)
     {
         return Config::getConfigByKeys($keys);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasFlash()
+    {
+        return self::$flashMessage->hasFlash();
+    }
+
+    /**
+     * @return null|string
+     */
+    public static function getFlash()
+    {
+        return self::$flashMessage->getFlash();
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function setFlashNormal($message)
+    {
+        return self::$flashMessage->setFlashNormal($message);
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function setFlashSuccess($message)
+    {
+        return self::$flashMessage->setFlashSuccess($message);
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function setFlashWarning($message)
+    {
+        return self::$flashMessage->setFlashWarning($message);
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return bool
+     */
+    public static function setFlashError($message)
+    {
+        return self::$flashMessage->setFlashError($message);
     }
 
     /**
@@ -196,6 +271,10 @@ class Frontend
         // add short syntax for translation
         $params['t'] = self::$locale;
 
+        // add short syntax for flash message
+        $params['hasFlash'] = self::$flashMessage->hasFlash();
+        $params['flashMessage'] = self::$flashMessage->getFlash();
+
         return self::renderTemplate(self::TEMPLATE_PHTML, $pathTemplate, $params);
     }
 
@@ -224,6 +303,10 @@ class Frontend
     {
         // add short syntax for translation
         $params['t'] = self::$locale;
+
+        // add short syntax for flash message
+        $params['hasFlash'] = self::$flashMessage->hasFlash();
+        $params['flashMessage'] = self::$flashMessage->getFlash();
 
         return self::renderFormTemplate(self::TEMPLATE_PHTML, $form, $pathTemplate, $params);
     }
