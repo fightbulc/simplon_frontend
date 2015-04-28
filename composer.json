@@ -31,7 +31,7 @@
         "simplon/locale": "0.1.*",
         "simplon/template": "0.3.*",
         "simplon/error": "0.2.*",
-        "simplon/form": "0.5.*"
+        "simplon/form": "0.6.*"
     },
     "autoload": {
         "psr-4": {

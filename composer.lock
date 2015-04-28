@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4f7e9365c6ba73469399fd6e5eda3c70",
+    "hash": "856cf4fe40b8c3dbe105d7515e6d4b80",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -156,16 +156,16 @@
         },
         {
             "name": "simplon/form",
-            "version": "0.5.9",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_form.git",
-                "reference": "854f7694970bcd160032de4a231bc2cb9c069fa8"
+                "reference": "82d9e60111847921486995ebe8f2bf3e4eac4523"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_form/zipball/854f7694970bcd160032de4a231bc2cb9c069fa8",
-                "reference": "854f7694970bcd160032de4a231bc2cb9c069fa8",
+                "url": "https://api.github.com/repos/fightbulc/simplon_form/zipball/82d9e60111847921486995ebe8f2bf3e4eac4523",
+                "reference": "82d9e60111847921486995ebe8f2bf3e4eac4523",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "phtml",
                 "validation"
             ],
-            "time": "2015-04-20 13:50:20"
+            "time": "2015-04-28 06:50:08"
         },
         {
             "name": "simplon/helper",
