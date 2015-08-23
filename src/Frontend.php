@@ -54,11 +54,11 @@ class Frontend
     private static $errorObserver;
 
     /**
-     * @param Router                  $router
-     * @param ErrorObserver           $errorObserver
+     * @param Router $router
+     * @param ErrorObserver $errorObserver
      * @param SessionStorageInterface $sessionStorage
-     * @param array                   $configCommon
-     * @param array                   $configEnv
+     * @param array $configCommon
+     * @param array $configEnv
      *
      * @return string
      * @throws RouterException
@@ -242,14 +242,15 @@ class Frontend
 
     /**
      * @param array $codeLines
+     * @param string $blockId
      *
      * @return bool
      */
-    public static function addAssetsCode(array $codeLines)
+    public static function addAssetsCode(array $codeLines, $blockId = 'after')
     {
         foreach ($codeLines as $line)
         {
-            self::$template->addAssetCode($line);
+            self::$template->addAssetCode($line, $blockId);
         }
 
         return true;
@@ -257,7 +258,7 @@ class Frontend
 
     /**
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
@@ -269,7 +270,7 @@ class Frontend
 
     /**
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
@@ -286,9 +287,9 @@ class Frontend
     }
 
     /**
-     * @param Form   $form
+     * @param Form $form
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
@@ -299,9 +300,9 @@ class Frontend
     }
 
     /**
-     * @param Form   $form
+     * @param Form $form
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
@@ -398,7 +399,7 @@ class Frontend
     /**
      * @param string $type
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
@@ -427,9 +428,9 @@ class Frontend
 
     /**
      * @param string $type
-     * @param Form   $form
+     * @param Form $form
      * @param string $pathTemplate
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      * @throws FrontendException
