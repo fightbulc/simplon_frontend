@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "856cf4fe40b8c3dbe105d7515e6d4b80",
+    "hash": "f3c5e2c2135eda09b18020baf0c2d35b",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -156,16 +156,16 @@
         },
         {
             "name": "simplon/form",
-            "version": "0.6.0",
+            "version": "0.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_form.git",
-                "reference": "82d9e60111847921486995ebe8f2bf3e4eac4523"
+                "reference": "e652c7a2f20b00d09d244d0a93bc07ee8371b876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_form/zipball/82d9e60111847921486995ebe8f2bf3e4eac4523",
-                "reference": "82d9e60111847921486995ebe8f2bf3e4eac4523",
+                "url": "https://api.github.com/repos/fightbulc/simplon_form/zipball/e652c7a2f20b00d09d244d0a93bc07ee8371b876",
+                "reference": "e652c7a2f20b00d09d244d0a93bc07ee8371b876",
                 "shasum": ""
             },
             "require": {
@@ -202,20 +202,20 @@
                 "phtml",
                 "validation"
             ],
-            "time": "2015-04-28 06:50:08"
+            "time": "2015-08-29 04:58:11"
         },
         {
             "name": "simplon/helper",
-            "version": "0.10.1",
+            "version": "0.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_helper.git",
-                "reference": "f2997490447148fe5f97938084fcc993bc3bf175"
+                "reference": "7921201862cedf56956718796f24d62b8cb96168"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_helper/zipball/f2997490447148fe5f97938084fcc993bc3bf175",
-                "reference": "f2997490447148fe5f97938084fcc993bc3bf175",
+                "url": "https://api.github.com/repos/fightbulc/simplon_helper/zipball/7921201862cedf56956718796f24d62b8cb96168",
+                "reference": "7921201862cedf56956718796f24d62b8cb96168",
                 "shasum": ""
             },
             "require": {
@@ -246,7 +246,7 @@
                 "strings",
                 "value objects"
             ],
-            "time": "2015-04-18 13:03:36"
+            "time": "2015-09-01 07:06:05"
         },
         {
             "name": "simplon/locale",
@@ -383,16 +383,16 @@
         },
         {
             "name": "simplon/request",
-            "version": "0.3.0",
+            "version": "0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_request.git",
-                "reference": "736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3"
+                "reference": "965ac48598279928abfbcbca4be6c9180f95776a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_request/zipball/736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3",
-                "reference": "736514104fcf01d1a9ea76c8fcaf7fb6f2124ad3",
+                "url": "https://api.github.com/repos/fightbulc/simplon_request/zipball/965ac48598279928abfbcbca4be6c9180f95776a",
+                "reference": "965ac48598279928abfbcbca4be6c9180f95776a",
                 "shasum": ""
             },
             "require": {
@@ -425,7 +425,7 @@
                 "post",
                 "request"
             ],
-            "time": "2015-04-16 05:35:41"
+            "time": "2015-09-01 07:21:09"
         },
         {
             "name": "simplon/router",
@@ -473,16 +473,16 @@
         },
         {
             "name": "simplon/template",
-            "version": "0.3.0",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fightbulc/simplon_template.git",
-                "reference": "cd30d4569e324dd29b6b6790ee781e49edd21ff1"
+                "reference": "81e10fef58a62ab81f365b19d4824d4d280d799f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fightbulc/simplon_template/zipball/cd30d4569e324dd29b6b6790ee781e49edd21ff1",
-                "reference": "cd30d4569e324dd29b6b6790ee781e49edd21ff1",
+                "url": "https://api.github.com/repos/fightbulc/simplon_template/zipball/81e10fef58a62ab81f365b19d4824d4d280d799f",
+                "reference": "81e10fef58a62ab81f365b19d4824d4d280d799f",
                 "shasum": ""
             },
             "require": {
@@ -516,7 +516,7 @@
                 "phtml",
                 "templates"
             ],
-            "time": "2015-03-17 19:15:23"
+            "time": "2015-08-23 17:53:07"
         }
     ],
     "packages-dev": [],

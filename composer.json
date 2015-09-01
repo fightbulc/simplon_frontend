@@ -1,41 +1,41 @@
 {
-    "name": "simplon/frontend",
-    "description": "Bootstrap Frontend Library",
-    "homepage": "https://github.com/fightbulc/simplon_frontend",
-    "type": "library",
-    "keywords": [
-        "frontend",
-        "controller",
-        "templates",
-        "router",
-        "mustache",
-        "locales",
-        "i18n",
-        "fast",
-        "lightweight",
-        "form"
-    ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Tino Ehrich",
-            "email": "tino@bigpun.me",
-            "role": "developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.4",
-        "simplon/helper": "0.10.*",
-        "simplon/request": "0.3.*",
-        "simplon/router": "0.2.*",
-        "simplon/locale": "0.1.*",
-        "simplon/template": "0.5.*",
-        "simplon/error": "0.2.*",
-        "simplon/form": "0.6.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Simplon\\Frontend\\": "src/"
-        }
+  "name": "simplon/frontend",
+  "description": "Bootstrap Frontend Library",
+  "homepage": "https://github.com/fightbulc/simplon_frontend",
+  "type": "library",
+  "keywords": [
+    "frontend",
+    "controller",
+    "templates",
+    "router",
+    "mustache",
+    "locales",
+    "i18n",
+    "fast",
+    "lightweight",
+    "form"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tino Ehrich",
+      "email": "tino@bigpun.me",
+      "role": "developer"
     }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "simplon/helper": "0.11.*",
+    "simplon/request": "0.3.*",
+    "simplon/router": "0.2.*",
+    "simplon/locale": "0.1.*",
+    "simplon/template": "0.5.*",
+    "simplon/error": "0.2.*",
+    "simplon/form": "0.6.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Simplon\\Frontend\\": "src/"
+    }
+  }
 }
