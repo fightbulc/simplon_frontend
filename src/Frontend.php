@@ -355,8 +355,28 @@ class Frontend
         // handle json response
         if ($response instanceof JsonResponse)
         {
-            header('Content-type: application/json');
             $response = json_encode($response->getData());
+
+            // catch encoding errors
+            if ($lastError = json_last_error())
+            {
+                $errorCodes = [
+                    1 => 'JSON_ERROR_DEPTH',
+                    2 => 'JSON_ERROR_STATE_MISMATCH',
+                    3 => 'JSON_ERROR_CTRL_CHAR',
+                    4 => 'JSON_ERROR_SYNTAX',
+                    5 => 'JSON_ERROR_UTF8',
+                ];
+
+                return self::$errorObserver->handleErrorResponse(
+                    (new ErrorResponse())
+                        ->setResponseType(ErrorResponse::RESPONSE_TYPE_JSON)
+                        ->internalError('An error occured while trying to send a JSON response', null, ['type' => $errorCodes[$lastError]])
+                );
+            }
+
+            // all good, lets set header
+            header('Content-type: application/json; charset=utf-8');
         }
 
         return (string)$response;
